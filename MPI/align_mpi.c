@@ -328,6 +328,8 @@ int main(int argc, char *argv[]) {
  * START HERE: DO NOT CHANGE THE CODE ABOVE THIS POINT
  *
  */
+	int size;
+	MPI_Comm_
 	/* 2.1. Allocate and fill sequence */
 	char *sequence = (char *)malloc( sizeof(char) * seq_length );
 	if ( sequence == NULL ) {
@@ -417,7 +419,12 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	/* 6. Receiving partial information */
 	if (rank == 0){
+
+	} else {
+		
+	}
 
 	/* 7. Check sums */
 	unsigned long checksum_matches = 0;
