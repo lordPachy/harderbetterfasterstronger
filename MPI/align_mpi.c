@@ -54,10 +54,7 @@ double cp_Wtime(){
 void increment_matches( int pat, unsigned long *pat_found, unsigned long *pat_length, int *seq_matches ) {
 	unsigned long ind;	
 	for( ind=0; ind<pat_length[pat]; ind++) {
-		if ( seq_matches[ pat_found[pat] + ind ] == NOT_FOUND )
-			seq_matches[ pat_found[pat] + ind ] = 0;
-		else
-			seq_matches[ pat_found[pat] + ind ] ++;
+		seq_matches[ pat_found[pat] + ind ]++;
 	}
 }
 
@@ -329,7 +326,7 @@ int main(int argc, char *argv[]) {
  *
  */
 	int size;
-	MPI_Comm_
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	/* 2.1. Allocate and fill sequence */
 	char *sequence = (char *)malloc( sizeof(char) * seq_length );
 	if ( sequence == NULL ) {
@@ -361,21 +358,10 @@ int main(int argc, char *argv[]) {
 
 	/* 2.3.2. Other results related to the main sequence */
 	int *seq_matches;
-	seq_matches = (int *)malloc( sizeof(int) * seq_length );
+	seq_matches = (int *)malloc(sizeof(unsigned long) * (seq_length + 1));
 	if ( seq_matches == NULL ) {
-		fprintf(stderr,"\n-- Error allocating aux sequence structures for size: %lu\n", seq_length );
+		fprintf(stderr,"\n-- Error allocating aux sequence structures for size: %lu\n", (seq_length + 1));
 		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
-	}
-
-	/* 3. Preparing the receiveing buffers*/
-	if (rank == 0){
-		int *buf_pat_matches = (int*) malloc(sizeof(int) * (size - 1));
-		int **buf_seq_matches = (int**) malloc (sizeof(int*) * (size - 1));
-		int **buf_pat_found = (int**) malloc (sizeof(int*) * (size - 1));
-		for (int i = 0; i < size - 1; i++){
-			buf_seq_matches[i] = (int*) malloc(sizeof(int) * seq_length);
-			buf_pat_found[i] = (int*) calloc (sizeof(int), pat_number)
-		}
 	}
 
 	/* 4. Initialize ancillary structures */
@@ -383,7 +369,7 @@ int main(int argc, char *argv[]) {
 		pat_found[ind] = (unsigned long)NOT_FOUND;			// pat_found[i] means that pattern i has been found starting at position pat_found[i]
 	}
 	for( lind=0; lind<seq_length; lind++) {
-		seq_matches[lind] = NOT_FOUND;						// seq_matches[i] means that in position i seq_matches[i] patterns have been found
+		seq_matches[lind] = 0;						// seq_matches[i] means that in position i seq_matches[i] patterns have been found
 	}
 
 	/* 5. Search for each pattern */
@@ -392,7 +378,7 @@ int main(int argc, char *argv[]) {
 	int start_idx = (pat_number / size) * rank;
 	int end_idx = (pat_number / size) * (rank + 1);
 	if (rank == size - 1){
-		end_idx = pat_number
+		end_idx = pat_number;
 	}
 	for( pat=start_idx; pat < end_idx; pat++ ) {
 
@@ -419,11 +405,42 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+
 	/* 6. Receiving partial information */
 	if (rank == 0){
+		unsigned long **buf_pat_found = (unsigned long**) malloc (sizeof(unsigned long*) * (size - 1));
+		int **buf_seq_matches = (int**) malloc (sizeof(int*) * (size - 1));
+		for (int i = 0; i < size - 1; i++){
+			buf_pat_found[i] = (unsigned long*) malloc(sizeof(unsigned long) * (pat_number));
+			buf_seq_matches[i] = (int*) malloc (sizeof(int) * (seq_length + 1));
+		}
 
+		int start_idx, end_idx;
+		for (int i = 1; i < size; i++){
+			MPI_Recv(buf_pat_found[i-1], pat_number, MPI_UNSIGNED_LONG, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			// Aggregating pat_found results
+			start_idx = (pat_number / size) * i;
+			end_idx = (pat_number / size) * (i + 1);
+			if (i == size - 1){
+				end_idx = pat_number;
+			}
+			for (int j = start_idx; j < end_idx; j++){
+				pat_found[j] = buf_pat_found[i-1][j];
+			}
+			
+			// Aggregating seq_matches results
+			MPI_Recv(buf_seq_matches[i-1], seq_length + 1, MPI_INT, i, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			for (int j = 0; j < seq_length; j++){
+				seq_matches[j] += buf_seq_matches[i-1][j];
+			}
+			// Aggregating pat_matches results
+			pat_matches += buf_seq_matches[i-1][seq_length];
+			fflush(stdout);
+		}
 	} else {
-		
+		seq_matches[seq_length] = pat_matches;
+		MPI_Send(pat_found, pat_number, MPI_UNSIGNED_LONG, 0, 0, MPI_COMM_WORLD);
+		MPI_Send(seq_matches, seq_length + 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
 	}
 
 	/* 7. Check sums */
@@ -434,8 +451,7 @@ int main(int argc, char *argv[]) {
 			checksum_found = ( checksum_found + pat_found[ind] ) % CHECKSUM_MAX;
 	}
 	for( lind=0; lind < seq_length; lind++) {
-		if ( seq_matches[lind] != NOT_FOUND )
-			checksum_matches = ( checksum_matches + seq_matches[lind] ) % CHECKSUM_MAX;
+		checksum_matches = ( checksum_matches + seq_matches[lind] ) % CHECKSUM_MAX;
 	}
 
 #ifdef DEBUG
@@ -449,11 +465,10 @@ int main(int argc, char *argv[]) {
 	printf("-----------------\n");
 	printf("Matches:");
 	for( lind=0; lind<seq_length; lind++ ) 
-		printf( " %d", seq_matches[lind] );
+		printf( " %lu", seq_matches[lind] );
 	printf("\n");
 	printf("-----------------\n");
 #endif // DEBUG
-	}
 
 	/* Free local resources */	
 	free( sequence );

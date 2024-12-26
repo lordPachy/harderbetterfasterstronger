@@ -53,10 +53,7 @@ double cp_Wtime(){
 void increment_matches( int pat, unsigned long *pat_found, unsigned long *pat_length, int *seq_matches ) {
 	unsigned long ind;	
 	for( ind=0; ind<pat_length[pat]; ind++) {
-		if ( seq_matches[ pat_found[pat] + ind ] == NOT_FOUND )
-			seq_matches[ pat_found[pat] + ind ] = 0;
-		else
-			seq_matches[ pat_found[pat] + ind ] ++;
+		seq_matches[ pat_found[pat] + ind ] ++;
 	}
 }
 
@@ -355,7 +352,7 @@ int main(int argc, char *argv[]) {
 		pat_found[ind] = (unsigned long)NOT_FOUND;
 	}
 	for( lind=0; lind<seq_length; lind++) {
-		seq_matches[lind] = NOT_FOUND;
+		seq_matches[lind] = 0;
 	}
 
 	/* 5. Search for each pattern */
@@ -394,8 +391,7 @@ int main(int argc, char *argv[]) {
 			checksum_found = ( checksum_found + pat_found[ind] ) % CHECKSUM_MAX;
 	}
 	for( lind=0; lind < seq_length; lind++) {
-		if ( seq_matches[lind] != NOT_FOUND )
-			checksum_matches = ( checksum_matches + seq_matches[lind] ) % CHECKSUM_MAX;
+		checksum_matches = ( checksum_matches + seq_matches[lind] ) % CHECKSUM_MAX;
 	}
 
 #ifdef DEBUG
