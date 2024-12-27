@@ -443,15 +443,9 @@ int main(int argc, char *argv[]) {
 	}
 	
 	omp_set_num_threads(2);
-	omp_lock_t lock;
-	omp_init_lock(&lock);
-	int counter = 0;
-
+	int count = 0;
 	#pragma omp parallel sections
 	{	
-		#pragma omp master
-		omp_set_lock(&lock);
-
 		#pragma omp section
 		{	
 			// Debugging
@@ -459,7 +453,6 @@ int main(int argc, char *argv[]) {
 			fflush(stdout);
 
 			for(int pat=start_idx; pat < end_idx; pat++ ) {
-
 				/* 5.1. For each posible starting position */
 				for( start=0; start <= seq_length - pat_length[pat]; start++) {
 
@@ -476,42 +469,46 @@ int main(int argc, char *argv[]) {
 					}
 				}
 
-				// Signaling to the other thread it can access seq_matches
-						#pragma omp critical
-						{
-							if (counter == 0){
-							omp_unset_lock(&lock);
-						}
-						counter += 1;
-						}
+				#pragma omp critical
+				{	
+					#pragma omp flush (count)
+					count++;
+					#pragma omp flush (count)
+				}
 			}
+
+			// Debugging
+			printf("Hi, I'm rank.process: %d.%d and i just finished...\n", rank, omp_get_thread_num());
+			fflush(stdout);
 		}
 
-		// Debugging
-		printf("Hi, I'm rank.process: %d.%d and i just finished...\n", rank, omp_get_thread_num());
-		fflush(stdout);
 		
 		#pragma omp section
 		{	
 			// Debugging
 			printf("Hi, I'm rank.process: %d.%d\n", rank, omp_get_thread_num());
 			fflush(stdout);
-			unsigned long tmp;
 			/* 5.2. Pattern found */
 			// Seq_matches update is performed by a different thread
 			for(int pat=start_idx; pat < end_idx; pat++ ) {
-				while(pat_found[pat] == (unsigned long)NOT_FOUND){
-					tmp = pat_found[pat];
-				};
-				if ( pat_found[pat] != -2 ) {
+				while(count == 0){
+					#pragma omp flush (count)
+				}
+
+				#pragma omp critical
+				{	
+					#pragma omp flush (count)
+					count--;
+					#pragma omp flush (count)
+				}
+
+				if (pat_found[pat] != NOT_FOUND) {
 					/* 4.2.1. Increment the number of pattern matches on the sequence positions */
 					increment_matches( pat, pat_found, pat_length, seq_matches );
-				} else {
-					pat_found[pat] = (unsigned long)NOT_FOUND;
 				}
 			}
 			// Debugging
-			printf("Hi, I'm rank.process: %d.%d and I just finished...", rank, omp_get_thread_num());
+			printf("Hi, I'm rank.process: %d.%d and I just finished...\n", rank, omp_get_thread_num());
 			fflush(stdout);
 		}
 	}
