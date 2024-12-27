@@ -11,6 +11,7 @@
 # Compilers
 CC=gcc
 OMPFLAG=-fopenmp
+PFLAG=-pthread
 MPICC=mpicc
 CUDACC=nvcc
 
@@ -18,10 +19,9 @@ CUDACC=nvcc
 LIBS=-lm
 FLAGS=-O3 -Wall
 CUDAFLAGS=-O3 -Xcompiler -Wall
-PFLAGS=-O3 -Wall -lpthread
 
 # Targets to build
-OBJS=align_seq align_pthreads align_mpi align_cuda
+OBJS=align_seq align_mpi align_pthread align_omp align_mpiomp
 
 # Rules. By default show help
 help:
@@ -45,15 +45,20 @@ all: $(OBJS)
 align_seq: align.c rng.c
 	$(CC) $(FLAGS) $(DEBUG) $< $(LIBS) -o $@
 
-align_pthreads: align_pthreads.c rng.c
-	$(CC) $(FLAGS) $(DEBUG) $(PFLAGS) $< $(LIBS) -o $@
-
 align_mpi: align_mpi.c rng.c
 	$(MPICC) $(FLAGS) $(DEBUG) $< $(LIBS) -o $@
 
+align_pthread: align_pthreads.c rng.c
+	$(CC) $(FLAGS) $(DEBUG) $(PFLAG) $< $(LIBS) -o $@
+
+align_omp: align_omp.c rng.c
+	$(CC) $(FLAGS) $(DEBUG) $(OMPFLAG) $< $(LIBS) -o $@
+
+align_mpiomp: align_mpiomp.c rng.c
+	$(MPICC) $(FLAGS) $(DEBUG) $(OMPFLAG) $< $(LIBS) -o $@
+
 align_cuda: align_cuda.cu rng.c
 	$(CUDACC) $(CUDAFLAGS) $(DEBUG) $< $(LIBS) -o $@
-
 
 # Remove the target files
 clean:
