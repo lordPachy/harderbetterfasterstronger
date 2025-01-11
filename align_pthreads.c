@@ -528,17 +528,16 @@ int main(int argc, char *argv[]) {
 	ttotal = cp_Wtime() - ttotal;
 
 	/* 9. Output for leaderboard */
-	printf("\n");
-	printf("Number of threads: %d\n", num_threads);
 	/* 9.1. Total computation time */
-	printf("Time: %lf\n", ttotal );
+	printf("%lf\n", ttotal);
 
 	/* 9.2. Results: Statistics */
-	printf("Result: %d, %lu, %lu\n\n", 
+	printf("%d\n%lu\n%lu\n", 
 			pat_matches,
 			checksum_found,
 			checksum_matches );
 		
+
 	/* 10. Free resources */	
 	int i;
 	for( i=0; i<pat_number; i++ ) free( pattern[i] );
