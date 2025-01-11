@@ -17,7 +17,9 @@
 #include<limits.h>
 #include<sys/time.h>
 #include<pthread.h>
-
+#ifndef NUM_THREADS
+#define NUM_THREADS 1
+#endif
 
 /* Arbitrary value to indicate that no matches are found */
 #define	NOT_FOUND	-1
@@ -427,7 +429,7 @@ int main(int argc, char *argv[]) {
 	/* 5. Search for each pattern */
 
 	// Variable initialization: thread management
-	int num_threads = 2;
+	int num_threads = NUM_THREADS;
 	pthread_t** thread_handles = malloc(sizeof(pthread_t*) * num_threads);
 	pattern_recognition_args* args = malloc(sizeof(pattern_recognition_args) * num_threads);
 
@@ -527,6 +529,7 @@ int main(int argc, char *argv[]) {
 
 	/* 9. Output for leaderboard */
 	printf("\n");
+	printf("Number of threads: %d\n", num_threads);
 	/* 9.1. Total computation time */
 	printf("Time: %lf\n", ttotal );
 
