@@ -5,7 +5,7 @@ printf "PTHREADS JOB CREATION\n"
 printf ".....................................................\n"
 for num_threads in 2 4 8 16; do
 mkdir threads_${num_threads}
-for seq_length in 10 25 30 40; do
+for seq_length in 10 15 20; do
 mkdir threads_${num_threads}/seq_length_${seq_length}
 for num_patterns in 10 15 20 25; do
 mkdir threads_${num_threads}/seq_length_${seq_length}/patterns_${num_patterns}

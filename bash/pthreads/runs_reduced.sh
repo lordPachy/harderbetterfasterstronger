@@ -4,7 +4,7 @@ printf ".....................................................\n"
 printf "PTHREADS JOB RUNNING (REDUCED VERSION)\n"
 printf ".....................................................\n"
 for num_threads in 2 4 8 16; do
-for seq_length in 10 25; do
+for seq_length in 10 15; do
 for num_patterns in 10 15; do
 for pattern_mean_length in 4 6 8; do
 if [ ${seq_length} -ge ${pattern_mean_length} ]; then

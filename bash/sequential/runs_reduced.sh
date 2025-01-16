@@ -3,7 +3,7 @@
 printf ".....................................................\n"
 printf "SEQUENTIAL JOB RUNNING\n"
 printf ".....................................................\n"
-for seq_length in 10; do
+for seq_length in 10 15; do
 for num_patterns in 10; do
 for pattern_mean_length in 4; do
 if [ ${seq_length} -ge ${pattern_mean_length} ]; then

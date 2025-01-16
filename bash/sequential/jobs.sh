@@ -3,7 +3,7 @@
 printf ".....................................................\n"
 printf "SEQUENTIAL JOB CREATION\n"
 printf ".....................................................\n"
-for seq_length in 10 25 30 40; do
+for seq_length in 10 15 20; do
 mkdir seq_length_${seq_length}
 for num_patterns in 10 15 20 25; do
 mkdir seq_length_${seq_length}/patterns_${num_patterns}

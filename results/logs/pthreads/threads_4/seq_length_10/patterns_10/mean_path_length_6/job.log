@@ -1,12 +1,12 @@
-000 (260807.000.000) 2025-01-12 10:03:57 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (262059.000.000) 2025-01-16 18:01:00 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (260807.000.000) 2025-01-12 10:04:16 Job executing on host: <192.168.0.116:9618?addrs=192.168.0.116-9618&alias=node116.di.rm1&noUDP&sock=startd_1847_7783>
+001 (262059.000.000) 2025-01-16 18:01:06 Job executing on host: <192.168.0.104:9618?addrs=192.168.0.104-9618&alias=node104.di.rm1&noUDP&sock=startd_1987_7ec5>
 ...
-006 (260807.000.000) 2025-01-12 10:04:16 Image size of job updated: 27
+006 (262059.000.000) 2025-01-16 18:01:06 Image size of job updated: 19956
 	0  -  MemoryUsage of job (MB)
 	0  -  ResidentSetSize of job (KB)
 ...
-005 (260807.000.000) 2025-01-12 10:04:16 Job terminated.
+005 (262059.000.000) 2025-01-16 18:01:07 Job terminated.
 	(1) Normal termination (return value 0)
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
@@ -18,58 +18,8 @@
 	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
 	   Cpus                 :                 1         1 
-	   Disk (KB)            :       27       27    474557 
+	   Disk (KB)            :       27       27    465175 
 	   Memory (MB)          :        0        1       128 
 
-	Job terminated of its own accord at 2025-01-12T10:04:16Z with exit-code 0.
-...
-000 (260855.000.000) 2025-01-12 10:09:05 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
-...
-001 (260855.000.000) 2025-01-12 10:09:08 Job executing on host: <192.168.0.116:9618?addrs=192.168.0.116-9618&alias=node116.di.rm1&noUDP&sock=startd_1847_7783>
-...
-006 (260855.000.000) 2025-01-12 10:09:08 Image size of job updated: 27
-	0  -  MemoryUsage of job (MB)
-	0  -  ResidentSetSize of job (KB)
-...
-005 (260855.000.000) 2025-01-12 10:09:08 Job terminated.
-	(1) Normal termination (return value 0)
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
-	0  -  Run Bytes Sent By Job
-	0  -  Run Bytes Received By Job
-	0  -  Total Bytes Sent By Job
-	0  -  Total Bytes Received By Job
-	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :                 1         1 
-	   Disk (KB)            :       27       27    474557 
-	   Memory (MB)          :        0        1       128 
-
-	Job terminated of its own accord at 2025-01-12T10:09:08Z with exit-code 0.
-...
-000 (260942.000.000) 2025-01-12 11:05:33 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
-...
-001 (260942.000.000) 2025-01-12 11:05:35 Job executing on host: <192.168.0.148:9618?addrs=192.168.0.148-9618&alias=node148.di.rm1&noUDP&sock=startd_1547_b119>
-...
-006 (260942.000.000) 2025-01-12 11:05:35 Image size of job updated: 19956
-	0  -  MemoryUsage of job (MB)
-	0  -  ResidentSetSize of job (KB)
-...
-005 (260942.000.000) 2025-01-12 11:05:36 Job terminated.
-	(1) Normal termination (return value 0)
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
-	0  -  Run Bytes Sent By Job
-	0  -  Run Bytes Received By Job
-	0  -  Total Bytes Sent By Job
-	0  -  Total Bytes Received By Job
-	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :                 1         1 
-	   Disk (KB)            :       27       27    467548 
-	   Memory (MB)          :        0        1       128 
-
-	Job terminated of its own accord at 2025-01-12T11:05:35Z with exit-code 0.
+	Job terminated of its own accord at 2025-01-16T18:01:06Z with exit-code 0.
 ...

@@ -1,0 +1,20 @@
+000 (262114.000.000) 2025-01-16 18:01:01 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (262114.000.000) 2025-01-16 18:01:14 Job executing on host: <192.168.0.104:9618?addrs=192.168.0.104-9618&alias=node104.di.rm1&noUDP&sock=startd_1987_7ec5>
+...
+006 (262114.000.000) 2025-01-16 18:01:22 Image size of job updated: 1386204
+	363  -  MemoryUsage of job (MB)
+	371316  -  ResidentSetSize of job (KB)
+...
+006 (262114.000.000) 2025-01-16 18:07:28 Image size of job updated: 8973432
+	7984  -  MemoryUsage of job (MB)
+	8174912  -  ResidentSetSize of job (KB)
+...
+006 (262114.000.000) 2025-01-16 18:13:02 Image size of job updated: 10010424
+	9020  -  MemoryUsage of job (MB)
+	9236244  -  ResidentSetSize of job (KB)
+...
+022 (262114.000.000) 2025-01-16 18:17:33 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@node104.di.rm1 <192.168.0.104:9618?addrs=192.168.0.104-9618&alias=node104.di.rm1&noUDP&sock=startd_1987_7ec5>
+...
