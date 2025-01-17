@@ -1,0 +1,29 @@
+000 (263078.000.000) 2025-01-17 11:20:41 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (263078.000.000) 2025-01-17 11:20:53 Job executing on host: <192.168.0.104:9618?addrs=192.168.0.104-9618&alias=node104.di.rm1&noUDP&sock=startd_1987_7ec5>
+...
+006 (263078.000.000) 2025-01-17 11:21:02 Image size of job updated: 1427520
+	509  -  MemoryUsage of job (MB)
+	520872  -  ResidentSetSize of job (KB)
+...
+006 (263078.000.000) 2025-01-17 11:29:04 Image size of job updated: 9380520
+	8424  -  MemoryUsage of job (MB)
+	8625436  -  ResidentSetSize of job (KB)
+...
+006 (263078.000.000) 2025-01-17 11:32:57 Image size of job updated: 9380520
+	8426  -  MemoryUsage of job (MB)
+	8627680  -  ResidentSetSize of job (KB)
+...
+022 (263078.000.000) 2025-01-17 11:34:25 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_7@node104.di.rm1 <192.168.0.104:9618?addrs=192.168.0.104-9618&alias=node104.di.rm1&noUDP&sock=startd_1987_7ec5>
+...
+024 (263078.000.000) 2025-01-17 12:13:17 Job reconnection failed
+    Job disconnected too long: JobLeaseDuration (2400 seconds) expired
+    Can not reconnect to slot1_7@node104.di.rm1, rescheduling job
+...
+009 (263078.000.000) 2025-01-17 12:13:17 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+
+	Job terminated by itself at 2025-01-17T11:32:53Z (using method 0: OF_ITS_OWN_ACCORD).
+...

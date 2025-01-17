@@ -1,0 +1,42 @@
+000 (265081.000.000) 2025-01-17 11:21:44 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (265081.000.000) 2025-01-17 11:21:49 Job executing on host: <192.168.0.139:9618?addrs=192.168.0.139-9618&alias=node139.di.rm1&noUDP&sock=startd_1966_1748>
+...
+006 (265081.000.000) 2025-01-17 11:21:57 Image size of job updated: 1359972
+	302  -  MemoryUsage of job (MB)
+	308748  -  ResidentSetSize of job (KB)
+...
+006 (265081.000.000) 2025-01-17 11:27:15 Image size of job updated: 5661224
+	4391  -  MemoryUsage of job (MB)
+	4496256  -  ResidentSetSize of job (KB)
+...
+006 (265081.000.000) 2025-01-17 11:32:24 Image size of job updated: 6536384
+	5245  -  MemoryUsage of job (MB)
+	5370628  -  ResidentSetSize of job (KB)
+...
+022 (265081.000.000) 2025-01-17 11:34:25 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_39@node139.di.rm1 <192.168.0.139:9618?addrs=192.168.0.139-9618&alias=node139.di.rm1&noUDP&sock=startd_1966_1748>
+...
+023 (265081.000.000) 2025-01-17 12:12:25 Job reconnected to slot1_39@node139.di.rm1
+    startd address: <192.168.0.139:9618?addrs=192.168.0.139-9618&alias=node139.di.rm1&noUDP&sock=startd_1966_1748>
+    starter address: <192.168.0.139:9618?addrs=192.168.0.139-9618&alias=node139.di.rm1&noUDP&sock=slot1_39_2142_fb90_15162>
+...
+006 (265081.000.000) 2025-01-17 12:12:29 Image size of job updated: 23646008
+	17379  -  MemoryUsage of job (MB)
+	17796072  -  ResidentSetSize of job (KB)
+...
+004 (265081.000.000) 2025-01-17 12:12:29 Job was evicted.
+	(0) CPU times
+		Usr 0 00:09:32, Sys 0 00:19:15  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     0.98        1         1 
+	   Disk (KB)            :    27          27    460637 
+	   Memory (MB)          : 17379           1       128 
+...
+009 (265081.000.000) 2025-01-17 12:12:29 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+...

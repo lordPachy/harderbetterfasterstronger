@@ -1,0 +1,35 @@
+000 (264011.000.000) 2025-01-17 11:21:09 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (264011.000.000) 2025-01-17 11:21:13 Job executing on host: <192.168.0.120:9618?addrs=192.168.0.120-9618&alias=node120.di.rm1&noUDP&sock=startd_2096_4298>
+...
+006 (264011.000.000) 2025-01-17 11:21:22 Image size of job updated: 440616
+	431  -  MemoryUsage of job (MB)
+	440616  -  ResidentSetSize of job (KB)
+...
+006 (264011.000.000) 2025-01-17 11:26:24 Image size of job updated: 6603020
+	6265  -  MemoryUsage of job (MB)
+	6414532  -  ResidentSetSize of job (KB)
+...
+006 (264011.000.000) 2025-01-17 11:32:21 Image size of job updated: 8325184
+	7858  -  MemoryUsage of job (MB)
+	8046272  -  ResidentSetSize of job (KB)
+...
+006 (264011.000.000) 2025-01-17 11:33:24 Image size of job updated: 8742684
+	7867  -  MemoryUsage of job (MB)
+	8054852  -  ResidentSetSize of job (KB)
+...
+004 (264011.000.000) 2025-01-17 11:33:24 Job was evicted.
+	(0) CPU times
+		Usr 0 00:03:44, Sys 0 00:03:47  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     0.67        1         1 
+	   Disk (KB)            :    27          27    459052 
+	   Gpus (Average)       :                 0         0 
+	   Memory (MB)          :  7867           1       128 
+...
+009 (264011.000.000) 2025-01-17 11:33:24 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+...
