@@ -1,0 +1,38 @@
+000 (264282.000.000) 2025-01-17 11:21:19 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (264282.000.000) 2025-01-17 11:21:31 Job executing on host: <192.168.0.133:9618?addrs=192.168.0.133-9618&alias=node133.di.rm1&noUDP&sock=startd_1941_f16a>
+...
+006 (264282.000.000) 2025-01-17 11:21:40 Image size of job updated: 1437156
+	382  -  MemoryUsage of job (MB)
+	390720  -  ResidentSetSize of job (KB)
+...
+006 (264282.000.000) 2025-01-17 11:27:42 Image size of job updated: 7131372
+	5677  -  MemoryUsage of job (MB)
+	5812356  -  ResidentSetSize of job (KB)
+...
+022 (264282.000.000) 2025-01-17 11:34:25 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_26@node133.di.rm1 <192.168.0.133:9618?addrs=192.168.0.133-9618&alias=node133.di.rm1&noUDP&sock=startd_1941_f16a>
+...
+023 (264282.000.000) 2025-01-17 12:07:43 Job reconnected to slot1_26@node133.di.rm1
+    startd address: <192.168.0.133:9618?addrs=192.168.0.133-9618&alias=node133.di.rm1&noUDP&sock=startd_1941_f16a>
+    starter address: <192.168.0.133:9618?addrs=192.168.0.133-9618&alias=node133.di.rm1&noUDP&sock=slot1_26_2265_a5b5_3599>
+...
+006 (264282.000.000) 2025-01-17 12:07:48 Image size of job updated: 22336320
+	19326  -  MemoryUsage of job (MB)
+	19789392  -  ResidentSetSize of job (KB)
+...
+004 (264282.000.000) 2025-01-17 12:07:48 Job was evicted.
+	(0) CPU times
+		Usr 0 00:09:19, Sys 0 00:10:48  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     0.99        1         1 
+	   Disk (KB)            :    27          27    473452 
+	   Memory (MB)          : 19326           1       128 
+...
+009 (264282.000.000) 2025-01-17 12:07:48 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+...
