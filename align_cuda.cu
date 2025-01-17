@@ -53,7 +53,24 @@ double cp_Wtime(){
  *
  */
 /* ADD KERNELS AND OTHER FUNCTIONS HERE */
-
+//define kernel
+	__global__ void find_patterns(unsigned long *seq_len, char *sequence, char **patterns, unsigned long *pattern_found, unsigned long *pat_length){
+		int pat = blockIdx.x;
+		unsigned long idx = (unsigned long)((*seq_len / blockDim.x) * threadIdx.x);
+		unsigned long i,j;
+		//loop for paralellizing seq
+		for(i = idx; i<idx+blockDim.x && i+pat_length[pat]<=*seq_len; i++){
+			//check the pattern
+			for(j = 0; j<pat_length[pat]; j++){
+				if(sequence[i+j] != patterns[pat][j]) break;
+			}
+			// check if last loop ended in match
+			if(j==pat_length[pat]){
+				pattern_found[pat] = i;
+				return;
+			}
+		}
+	}
 
 /*
  * Function: Increment the number of pattern matches on the sequence positions
@@ -393,12 +410,42 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* 5. Search for each pattern */
-    char* seq_cuda;
-	CUDA_CHECK_FUNCTION(cudaMemcpyHostToDevice((void *) seq_cuda, (void *)sequence, sizeof(char) * seq_length));
-	int* seq_matches_cuda;
-    CUDA_CHECK_FUNCTION(cudaMemcpyHostToDevice((void*) seq_matches_cuda, (void *) seq_matches, sizeof(int) * seq_length));
 
-    for()
+    char* d_sequence; 
+	unsigned long *d_pat_found_cuda;
+	unsigned long *d_seq_length;
+
+	CUDA_CHECK_FUNCTION(cudaMalloc(&d_sequence, sizeof(char) * seq_length));
+	CUDA_CHECK_FUNCTION(cudaMalloc(&d_pat_found_cuda, sizeof(unsigned long) * pat_number));
+	CUDA_CHECK_FUNCTION(cudaMalloc(&d_seq_length, sizeof(unsigned long)));
+	
+	CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_length,  pat_length, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
+	CUDA_CHECK_FUNCTION(cudaMemcpy( d_sequence, sequence, sizeof(char) * seq_length, cudaMemcpyHostToDevice));
+    CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_found_cuda,  pat_found, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
+	CUDA_CHECK_FUNCTION(cudaMemcpy( d_seq_length, &seq_length, sizeof(unsigned long), cudaMemcpyHostToDevice));
+
+	// identify longest pattern to assign resources
+	unsigned long longest = 0;
+    for(int pat = 0; pat<pat_number; pat++){
+		if( pat_length[pat] > longest){
+			longest = pat_length[pat];
+		}
+	}
+	// 1024 is max threads per block on cluster
+	int block = 1024;
+	int grid = pat_number;
+
+	find_patterns<<<grid, block>>>(d_seq_length, d_sequence, d_pattern, d_pat_found_cuda, d_pat_length);
+	CUDA_CHECK_KERNEL();
+
+	//update the result vector
+	CUDA_CHECK_FUNCTION(cudaMemcpy( pat_found, d_pat_found_cuda, sizeof(unsigned long) * pat_number, cudaMemcpyDeviceToHost));
+	for(int pat = 0; pat < pat_number; pat++){
+		if ( pat_found[pat] != (unsigned long)NOT_FOUND ) {
+			/* 4.2.1. Increment the number of pattern matches on the sequence positions */
+			increment_matches( pat, pat_found, pat_length, seq_matches );
+		}
+	}
 
 
     /* 7. Check sums */
@@ -410,6 +457,7 @@ int main(int argc, char *argv[]) {
 	}
 	for( lind=0; lind < seq_length; lind++) {
 		if ( seq_matches[lind] != NOT_FOUND )
+			pat_matches ++;
 			checksum_matches = ( checksum_matches + seq_matches[lind] ) % CHECKSUM_MAX;
 	}
 
