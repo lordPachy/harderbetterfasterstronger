@@ -18,3 +18,10 @@
     Socket between submit and execute hosts closed unexpectedly
     Trying to reconnect to slot1_26@node104.di.rm1 <192.168.0.104:9618?addrs=192.168.0.104-9618&alias=node104.di.rm1&noUDP&sock=startd_1987_7ec5>
 ...
+024 (262051.000.000) 2025-01-16 18:53:23 Job reconnection failed
+    Job disconnected too long: JobLeaseDuration (2400 seconds) expired
+    Can not reconnect to slot1_26@node104.di.rm1, rescheduling job
+...
+009 (262051.000.000) 2025-01-16 18:53:23 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+...
