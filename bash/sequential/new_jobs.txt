@@ -1,0 +1,9 @@
+universe = vanilla
+executable = ~/scripts/sequential/align_seq
+arguments = -infile $(filename)
+requirements = (Machine != "node126.di.rm1")
+request_cpus = 1
+error   = ~/filename/$(Process).err
+output  = filename/$(Process).out
+log     = filename/$(Process).log
+queue 10 filename matching files *.config
