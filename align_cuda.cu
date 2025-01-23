@@ -92,7 +92,7 @@ block = 1024
 		{
 		unsigned long pat = blockIdx.x;
 		unsigned long idx = blockIdx.y*blockDim.x + threadIdx.x;
-		unsigned long i=0;
+		unsigned long i;
 		// array for reduction
 		//TODO assign less memory to last block
 		//unsigned long portionedShared = blockDim.x;//(pat_length[pat] - gridDim.y*blockDim.x);
@@ -100,7 +100,7 @@ block = 1024
 		bool *isTheSame = s;
 		bool *aggregateIsTheSame = (bool *)&isTheSame[1024];
 
-		for(; i<*seq_len - pat_length[pat] + 1; i++){
+		for(i = 0; i < *seq_len - pat_length[pat] + 1; i++){
 			isTheSame[idx] = ((patterns[pat][idx] == sequence[idx+i]) && idx<pat_length[pat]);
 			__syncthreads();
 			
@@ -131,6 +131,74 @@ block = 1024
 					pattern_found[pat] = i;
 					return;
 				}
+				// if another block has already found pattern shut down all blocks
+				// looking for the same pattern
+				//if(pattern_found[pat] != NOT_FOUND){
+				//	return;
+				//}
+			}
+		}
+	}
+
+/*
+grid = (pat_number, however many blocks I need for a pattern, how many fractions of the input to process at the same time)
+block = 1024
+*/
+	__global__ void find_patterns_v2_5(
+		unsigned long *seq_len, 
+		char *sequence, 
+		char **patterns, 
+		unsigned long *pattern_found, 
+		unsigned long *pat_length, 
+		bool **g_isTheSame)
+		{
+		unsigned long pat = blockIdx.x;
+		unsigned long idx = blockIdx.y*blockDim.x + threadIdx.x;
+		unsigned long sect = (unsigned long)((double)*pat_length/gridDim.z);
+		unsigned long i;
+		// array for reduction
+		//TODO assign less memory to last block
+		//unsigned long portionedShared = blockDim.x;//(pat_length[pat] - gridDim.y*blockDim.x);
+		extern __shared__ bool s[];
+		bool *isTheSame = s;
+		bool *aggregateIsTheSame = (bool *)&isTheSame[1024];
+		
+		for(i = sect*blockIdx.z; i < (sect*(blockIdx.z+1)) && i < *seq_len - pat_length[pat] + 1; i++){
+			isTheSame[idx] = ((patterns[pat][idx] == sequence[idx+i]) && idx<pat_length[pat]);
+			__syncthreads();
+			
+
+			//aggregate infrablock
+			for(int r=pat_length[pat]/2; r>0; r /= 2){
+				if(idx<pat_length[pat]){
+					isTheSame[threadIdx.x] *=  isTheSame[threadIdx.x + r];
+				}
+				__syncthreads();
+			} 
+			
+			//aggregate interblock
+			if(threadIdx.x == 0) g_isTheSame[pat][blockIdx.y] = isTheSame[threadIdx.x];
+			if(blockIdx.y == 0){
+				if(threadIdx.x < gridDim.y){
+					aggregateIsTheSame[threadIdx.x] =  g_isTheSame[pat][threadIdx.x];
+				}
+				__syncthreads();
+					
+				for(int r=gridDim.y/2; r>0; r /= 2){
+					if(threadIdx.x < gridDim.y){
+						aggregateIsTheSame[threadIdx.x] *= aggregateIsTheSame[threadIdx.x + r];
+					}
+					__syncthreads();
+				}
+				if(threadIdx.x == 0 && aggregateIsTheSame[0]==1){
+					pattern_found[pat] = i;
+					return;
+				}
+				// if another block has already found pattern shut down all blocks
+				// looking for the same pattern
+				//if(pattern_found[pat] != NOT_FOUND){
+				//	return;
+				//}
 			}
 		}
 	}
@@ -483,7 +551,8 @@ int main(int argc, char *argv[]) {
 	}
 	// 1024 is max threads per block on cluster
 	int block = 1024;
-	dim3 grid(pat_number,(int)ceil((double)longest/block));
+	int sects = 2;
+	dim3 grid(pat_number,(int)ceil((double)longest/block),sects);
 
     char* d_sequence; 
 	unsigned long *d_pat_found_cuda;
