@@ -1,23 +1,26 @@
-000 (264039.000.000) 2025-01-17 11:21:11 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270431.000.000) 2025-01-21 23:52:25 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (264039.000.000) 2025-01-17 11:21:14 Job executing on host: <192.168.0.132:9618?addrs=192.168.0.132-9618&alias=node132.di.rm1&noUDP&sock=startd_1999_b9e8>
+001 (270431.000.000) 2025-01-21 23:52:44 Job executing on host: <192.168.0.147:9618?addrs=192.168.0.147-9618&alias=node147.di.rm1&noUDP&sock=startd_1513_5ee1>
 ...
-006 (264039.000.000) 2025-01-17 11:21:23 Image size of job updated: 475068
-	464  -  MemoryUsage of job (MB)
-	475068  -  ResidentSetSize of job (KB)
+006 (270431.000.000) 2025-01-21 23:52:53 Image size of job updated: 477972
+	467  -  MemoryUsage of job (MB)
+	477972  -  ResidentSetSize of job (KB)
 ...
-006 (264039.000.000) 2025-01-17 11:27:33 Image size of job updated: 637876
-	584  -  MemoryUsage of job (MB)
-	597636  -  ResidentSetSize of job (KB)
+006 (270431.000.000) 2025-01-21 23:53:26 Image size of job updated: 637876
+	468  -  MemoryUsage of job (MB)
+	478368  -  ResidentSetSize of job (KB)
 ...
-022 (264039.000.000) 2025-01-17 11:34:25 Job disconnected, attempting to reconnect
-    Socket between submit and execute hosts closed unexpectedly
-    Trying to reconnect to slot1_28@node132.di.rm1 <192.168.0.132:9618?addrs=192.168.0.132-9618&alias=node132.di.rm1&noUDP&sock=startd_1999_b9e8>
+004 (270431.000.000) 2025-01-21 23:53:26 Job was evicted.
+	(0) CPU times
+		Usr 0 00:02:11, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    469805 
+	   Memory (MB)          :      468        1       128 
 ...
-024 (264039.000.000) 2025-01-17 12:07:53 Job reconnection failed
-    Job disconnected too long: JobLeaseDuration (2400 seconds) expired
-    Can not reconnect to slot1_28@node132.di.rm1, rescheduling job
-...
-009 (264039.000.000) 2025-01-17 12:07:53 Job was aborted.
+009 (270431.000.000) 2025-01-21 23:53:26 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

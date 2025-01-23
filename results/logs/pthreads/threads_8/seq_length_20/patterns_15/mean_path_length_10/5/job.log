@@ -1,19 +1,22 @@
-000 (264585.000.000) 2025-01-17 11:21:27 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270977.000.000) 2025-01-22 00:30:24 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (264585.000.000) 2025-01-17 11:21:35 Job executing on host: <192.168.0.104:9618?addrs=192.168.0.104-9618&alias=node104.di.rm1&noUDP&sock=startd_1987_7ec5>
+001 (270977.000.000) 2025-01-22 00:30:25 Job executing on host: <192.168.0.147:9618?addrs=192.168.0.147-9618&alias=node147.di.rm1&noUDP&sock=startd_1513_5ee1>
 ...
-006 (264585.000.000) 2025-01-17 11:21:44 Image size of job updated: 126408
-	82  -  MemoryUsage of job (MB)
-	83028  -  ResidentSetSize of job (KB)
+006 (270977.000.000) 2025-01-22 00:30:33 Image size of job updated: 126408
+	81  -  MemoryUsage of job (MB)
+	82368  -  ResidentSetSize of job (KB)
 ...
-022 (264585.000.000) 2025-01-17 11:34:25 Job disconnected, attempting to reconnect
-    Socket between submit and execute hosts closed unexpectedly
-    Trying to reconnect to slot1_40@node104.di.rm1 <192.168.0.104:9618?addrs=192.168.0.104-9618&alias=node104.di.rm1&noUDP&sock=startd_1987_7ec5>
+004 (270977.000.000) 2025-01-22 00:31:26 Job was evicted.
+	(0) CPU times
+		Usr 0 00:03:36, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     3.72        1         1 
+	   Disk (KB)            :    27          27    469805 
+	   Memory (MB)          :    81           1       128 
 ...
-024 (264585.000.000) 2025-01-17 12:09:24 Job reconnection failed
-    Job disconnected too long: JobLeaseDuration (2400 seconds) expired
-    Can not reconnect to slot1_40@node104.di.rm1, rescheduling job
-...
-009 (264585.000.000) 2025-01-17 12:09:25 Job was aborted.
+009 (270977.000.000) 2025-01-22 00:31:26 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

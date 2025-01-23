@@ -1,29 +1,29 @@
-000 (263643.000.000) 2025-01-17 11:20:59 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270030.000.000) 2025-01-21 23:22:47 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (263643.000.000) 2025-01-17 11:21:03 Job executing on host: <192.168.0.135:9618?addrs=192.168.0.135-9618&alias=node135.di.rm1&noUDP&sock=startd_2000_6980>
+001 (270030.000.000) 2025-01-21 23:22:50 Job executing on host: <192.168.0.148:9618?addrs=192.168.0.148-9618&alias=node148.di.rm1&noUDP&sock=startd_1547_b119>
 ...
-006 (263643.000.000) 2025-01-17 11:21:12 Image size of job updated: 479696
-	440  -  MemoryUsage of job (MB)
-	449856  -  ResidentSetSize of job (KB)
+006 (270030.000.000) 2025-01-21 23:22:59 Image size of job updated: 466372
+	453  -  MemoryUsage of job (MB)
+	463336  -  ResidentSetSize of job (KB)
 ...
-006 (263643.000.000) 2025-01-17 11:21:54 Image size of job updated: 2132468
-	440  -  MemoryUsage of job (MB)
-	450120  -  ResidentSetSize of job (KB)
+006 (270030.000.000) 2025-01-21 23:23:33 Image size of job updated: 2054992
+	453  -  MemoryUsage of job (MB)
+	463864  -  ResidentSetSize of job (KB)
 ...
-005 (263643.000.000) 2025-01-17 11:21:54 Job terminated.
+005 (270030.000.000) 2025-01-21 23:23:33 Job terminated.
 	(1) Normal termination (return value 0)
-		Usr 0 00:00:49, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:43, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:00:49, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:43, Sys 0 00:00:00  -  Total Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
 	0  -  Total Bytes Sent By Job
 	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     1.01        1         1 
-	   Disk (KB)            :    27          27    470875 
-	   Memory (MB)          :   440           1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    467548 
+	   Memory (MB)          :      453        1       128 
 
-	Job terminated of its own accord at 2025-01-17T11:21:54Z with exit-code 0.
+	Job terminated of its own accord at 2025-01-21T23:23:33Z with exit-code 0.
 ...

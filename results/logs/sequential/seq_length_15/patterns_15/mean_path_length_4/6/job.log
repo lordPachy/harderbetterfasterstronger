@@ -1,16 +1,16 @@
-000 (262546.000.000) 2025-01-17 11:14:14 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (268459.000.000) 2025-01-21 21:49:03 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (262546.000.000) 2025-01-17 11:14:32 Job executing on host: <192.168.0.115:9618?addrs=192.168.0.115-9618&alias=node115.di.rm1&noUDP&sock=startd_1101621_f4a0>
+001 (268459.000.000) 2025-01-21 21:49:05 Job executing on host: <192.168.0.130:9618?addrs=192.168.0.130-9618&alias=node130.di.rm1&noUDP&sock=startd_2751195_838e>
 ...
-006 (262546.000.000) 2025-01-17 11:14:41 Image size of job updated: 313012
-	301  -  MemoryUsage of job (MB)
-	307796  -  ResidentSetSize of job (KB)
+006 (268459.000.000) 2025-01-21 21:49:14 Image size of job updated: 313012
+	302  -  MemoryUsage of job (MB)
+	309144  -  ResidentSetSize of job (KB)
 ...
-005 (262546.000.000) 2025-01-17 11:14:42 Job terminated.
+005 (268459.000.000) 2025-01-21 21:49:19 Job terminated.
 	(1) Normal termination (return value 0)
-		Usr 0 00:00:10, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:12, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:00:10, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:12, Sys 0 00:00:00  -  Total Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
@@ -18,8 +18,13 @@
 	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
 	   Cpus                 :                 1         1 
-	   Disk (KB)            :       27       27    472524 
-	   Memory (MB)          :      301        1       128 
+	   Disk (KB)            :       27       27    472313 
+	   Memory (MB)          :      302        1       128 
 
-	Job terminated of its own accord at 2025-01-17T11:14:42Z with exit-code 0.
+	Job terminated of its own accord at 2025-01-21T21:49:19Z with exit-code 0.
+...
+000 (268613.000.000) 2025-01-21 21:56:31 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+009 (268613.000.000) 2025-01-21 21:56:36 Job was aborted.
+	via condor_rm (by user calzona_2046920)
 ...

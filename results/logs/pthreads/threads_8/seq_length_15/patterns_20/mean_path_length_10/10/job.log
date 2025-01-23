@@ -1,26 +1,27 @@
-000 (264430.000.000) 2025-01-17 11:21:23 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270822.000.000) 2025-01-22 00:17:37 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (264430.000.000) 2025-01-17 11:21:33 Job executing on host: <192.168.0.146:9618?addrs=192.168.0.146-9618&alias=node146.di.rm1&noUDP&sock=startd_1984_6ffc>
+001 (270822.000.000) 2025-01-22 00:17:58 Job executing on host: <192.168.0.110:9618?addrs=192.168.0.110-9618&alias=node110.di.rm1&noUDP&sock=startd_2185_4e86>
 ...
-006 (264430.000.000) 2025-01-17 11:21:42 Image size of job updated: 322352
-	284  -  MemoryUsage of job (MB)
-	290664  -  ResidentSetSize of job (KB)
+006 (270822.000.000) 2025-01-22 00:18:07 Image size of job updated: 406692
+	398  -  MemoryUsage of job (MB)
+	406692  -  ResidentSetSize of job (KB)
 ...
-006 (264430.000.000) 2025-01-17 11:28:21 Image size of job updated: 2198528
-	2119  -  MemoryUsage of job (MB)
-	2169540  -  ResidentSetSize of job (KB)
+006 (270822.000.000) 2025-01-22 00:18:38 Image size of job updated: 1937628
+	398  -  MemoryUsage of job (MB)
+	407220  -  ResidentSetSize of job (KB)
 ...
-004 (264430.000.000) 2025-01-17 11:33:30 Job was evicted.
+004 (270822.000.000) 2025-01-22 00:18:38 Job was evicted.
 	(0) CPU times
-		Usr 0 00:06:49, Sys 0 00:02:43  -  Run Remote Usage
+		Usr 0 00:00:38, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     0.42        1         1 
-	   Disk (KB)            :    27          27    466414 
-	   Memory (MB)          :  2119           1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    468087 
+	   Gpus (Average)       :                 0         0 
+	   Memory (MB)          :      398        1       128 
 ...
-009 (264430.000.000) 2025-01-17 11:33:30 Job was aborted.
+009 (270822.000.000) 2025-01-22 00:18:38 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

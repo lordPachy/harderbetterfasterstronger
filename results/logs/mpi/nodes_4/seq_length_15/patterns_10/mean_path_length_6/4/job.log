@@ -1,0 +1,23 @@
+000 (273913.000.000) 2025-01-23 11:26:18 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+014 (273913.000.001) 2025-01-23 11:26:28 Node 1 executing on host: <192.168.0.135:9618?addrs=192.168.0.135-9618&alias=node135.di.rm1&noUDP&sock=startd_2000_6980>
+...
+014 (273913.000.003) 2025-01-23 11:26:28 Node 3 executing on host: <192.168.0.105:9618?addrs=192.168.0.105-9618&alias=node105.di.rm1&noUDP&sock=startd_1951_cd5c>
+...
+014 (273913.000.002) 2025-01-23 11:26:28 Node 2 executing on host: <192.168.0.143:9618?addrs=192.168.0.143-9618&alias=node143.di.rm1&noUDP&sock=startd_2061_40c7>
+...
+004 (273913.000.000) 2025-01-23 11:27:24 Job was evicted.
+	(0) CPU times
+		Usr 0 00:00:00, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	0  -  Run Bytes Sent By Job
+	100917  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         2 
+	   Disk (KB)            :       46       35 102827553 
+	   GPUs                 :                           0 
+	   Memory (MB)          :                 0    100096 
+...
+009 (273913.000.000) 2025-01-23 11:27:24 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+...

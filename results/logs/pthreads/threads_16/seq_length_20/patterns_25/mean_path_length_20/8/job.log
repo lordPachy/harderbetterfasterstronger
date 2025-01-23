@@ -1,34 +1,26 @@
-000 (265328.000.000) 2025-01-17 11:21:51 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (271720.000.000) 2025-01-22 01:26:33 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (265328.000.000) 2025-01-17 11:21:55 Job executing on host: <192.168.0.143:9618?addrs=192.168.0.143-9618&alias=node143.di.rm1&noUDP&sock=startd_2061_40c7>
+001 (271720.000.000) 2025-01-22 01:26:34 Job executing on host: <192.168.0.151:9618?addrs=192.168.0.151-9618&alias=node151.di.rm1&noUDP&sock=startd_1528_a8cd>
 ...
-006 (265328.000.000) 2025-01-17 11:22:04 Image size of job updated: 1291796
-	319  -  MemoryUsage of job (MB)
-	325644  -  ResidentSetSize of job (KB)
+006 (271720.000.000) 2025-01-22 01:26:43 Image size of job updated: 1222936
+	464  -  MemoryUsage of job (MB)
+	474408  -  ResidentSetSize of job (KB)
 ...
-006 (265328.000.000) 2025-01-17 11:27:04 Image size of job updated: 11584188
-	10290  -  MemoryUsage of job (MB)
-	10536636  -  ResidentSetSize of job (KB)
+006 (271720.000.000) 2025-01-22 01:27:35 Image size of job updated: 3426320
+	465  -  MemoryUsage of job (MB)
+	475728  -  ResidentSetSize of job (KB)
 ...
-006 (265328.000.000) 2025-01-17 11:32:05 Image size of job updated: 21841724
-	20684  -  MemoryUsage of job (MB)
-	21179400  -  ResidentSetSize of job (KB)
-...
-006 (265328.000.000) 2025-01-17 11:33:19 Image size of job updated: 24563040
-	20684  -  MemoryUsage of job (MB)
-	21179400  -  ResidentSetSize of job (KB)
-...
-004 (265328.000.000) 2025-01-17 11:33:19 Job was evicted.
+004 (271720.000.000) 2025-01-22 01:27:35 Job was evicted.
 	(0) CPU times
-		Usr 0 00:10:17, Sys 0 00:00:15  -  Run Remote Usage
+		Usr 0 00:00:58, Sys 0 00:00:01  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     0.96        1         1 
-	   Disk (KB)            :    27          27    459633 
-	   Memory (MB)          : 20684           1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    474791 
+	   Memory (MB)          :      465        1       128 
 ...
-009 (265328.000.000) 2025-01-17 11:33:19 Job was aborted.
+009 (271720.000.000) 2025-01-22 01:27:35 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

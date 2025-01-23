@@ -1,38 +1,26 @@
-000 (264128.000.000) 2025-01-17 11:21:15 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270520.000.000) 2025-01-22 00:01:40 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (264128.000.000) 2025-01-17 11:21:17 Job executing on host: <192.168.0.106:9618?addrs=192.168.0.106-9618&alias=node106.di.rm1&noUDP&sock=startd_1970_d5a9>
+001 (270520.000.000) 2025-01-22 00:01:41 Job executing on host: <192.168.0.147:9618?addrs=192.168.0.147-9618&alias=node147.di.rm1&noUDP&sock=startd_1513_5ee1>
 ...
-006 (264128.000.000) 2025-01-17 11:21:26 Image size of job updated: 1330836
-	346  -  MemoryUsage of job (MB)
-	353364  -  ResidentSetSize of job (KB)
+006 (270520.000.000) 2025-01-22 00:01:50 Image size of job updated: 1319532
+	464  -  MemoryUsage of job (MB)
+	474144  -  ResidentSetSize of job (KB)
 ...
-006 (264128.000.000) 2025-01-17 11:26:26 Image size of job updated: 11683884
-	10418  -  MemoryUsage of job (MB)
-	10667680  -  ResidentSetSize of job (KB)
+006 (270520.000.000) 2025-01-22 00:02:42 Image size of job updated: 3538352
+	465  -  MemoryUsage of job (MB)
+	475200  -  ResidentSetSize of job (KB)
 ...
-022 (264128.000.000) 2025-01-17 11:34:25 Job disconnected, attempting to reconnect
-    Socket between submit and execute hosts closed unexpectedly
-    Trying to reconnect to slot1_17@node106.di.rm1 <192.168.0.106:9618?addrs=192.168.0.106-9618&alias=node106.di.rm1&noUDP&sock=startd_1970_d5a9>
-...
-023 (264128.000.000) 2025-01-17 12:06:39 Job reconnected to slot1_17@node106.di.rm1
-    startd address: <192.168.0.106:9618?addrs=192.168.0.106-9618&alias=node106.di.rm1&noUDP&sock=startd_1970_d5a9>
-    starter address: <192.168.0.106:9618?addrs=192.168.0.106-9618&alias=node106.di.rm1&noUDP&sock=slot1_17_2157_8d31_33494>
-...
-006 (264128.000.000) 2025-01-17 12:06:44 Image size of job updated: 31763108
-	24546  -  MemoryUsage of job (MB)
-	25134152  -  ResidentSetSize of job (KB)
-...
-004 (264128.000.000) 2025-01-17 12:06:44 Job was evicted.
+004 (270520.000.000) 2025-01-22 00:02:42 Job was evicted.
 	(0) CPU times
-		Usr 0 00:15:18, Sys 0 00:08:29  -  Run Remote Usage
+		Usr 0 00:00:58, Sys 0 00:00:01  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     0.84        1         1 
-	   Disk (KB)            :    27          27    468979 
-	   Memory (MB)          : 24546           1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    469805 
+	   Memory (MB)          :      465        1       128 
 ...
-009 (264128.000.000) 2025-01-17 12:06:44 Job was aborted.
+009 (270520.000.000) 2025-01-22 00:02:42 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

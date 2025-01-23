@@ -1,27 +1,26 @@
-000 (264453.000.000) 2025-01-17 11:21:24 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270845.000.000) 2025-01-22 00:20:43 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (264453.000.000) 2025-01-17 11:21:33 Job executing on host: <192.168.0.120:9618?addrs=192.168.0.120-9618&alias=node120.di.rm1&noUDP&sock=startd_2096_4298>
+001 (270845.000.000) 2025-01-22 00:20:43 Job executing on host: <192.168.0.151:9618?addrs=192.168.0.151-9618&alias=node151.di.rm1&noUDP&sock=startd_1528_a8cd>
 ...
-006 (264453.000.000) 2025-01-17 11:21:42 Image size of job updated: 1423180
-	476  -  MemoryUsage of job (MB)
-	486948  -  ResidentSetSize of job (KB)
+006 (270845.000.000) 2025-01-22 00:20:52 Image size of job updated: 543640
+	531  -  MemoryUsage of job (MB)
+	543640  -  ResidentSetSize of job (KB)
 ...
-006 (264453.000.000) 2025-01-17 11:26:54 Image size of job updated: 6824460
-	6525  -  MemoryUsage of job (MB)
-	6680728  -  ResidentSetSize of job (KB)
+006 (270845.000.000) 2025-01-22 00:21:45 Image size of job updated: 4195324
+	532  -  MemoryUsage of job (MB)
+	544300  -  ResidentSetSize of job (KB)
 ...
-004 (264453.000.000) 2025-01-17 11:33:25 Job was evicted.
+004 (270845.000.000) 2025-01-22 00:21:45 Job was evicted.
 	(0) CPU times
-		Usr 0 00:11:37, Sys 0 00:11:22  -  Run Remote Usage
+		Usr 0 00:00:59, Sys 0 00:00:02  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     2.13        1         1 
-	   Disk (KB)            :    27          27    459052 
-	   Gpus (Average)       :                 0         0 
-	   Memory (MB)          :  6525           1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    474791 
+	   Memory (MB)          :      532        1       128 
 ...
-009 (264453.000.000) 2025-01-17 11:33:25 Job was aborted.
+009 (270845.000.000) 2025-01-22 00:21:45 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

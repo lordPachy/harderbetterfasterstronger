@@ -1,30 +1,26 @@
-000 (263423.000.000) 2025-01-17 11:20:49 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (269810.000.000) 2025-01-21 23:07:53 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (263423.000.000) 2025-01-17 11:20:55 Job executing on host: <192.168.0.137:9618?addrs=192.168.0.137-9618&alias=node137.di.rm1&noUDP&sock=startd_1934_2440>
+001 (269810.000.000) 2025-01-21 23:07:53 Job executing on host: <192.168.0.148:9618?addrs=192.168.0.148-9618&alias=node148.di.rm1&noUDP&sock=startd_1547_b119>
 ...
-006 (263423.000.000) 2025-01-17 11:21:03 Image size of job updated: 286848
-	262  -  MemoryUsage of job (MB)
-	267856  -  ResidentSetSize of job (KB)
+006 (269810.000.000) 2025-01-21 23:08:02 Image size of job updated: 272708
+	264  -  MemoryUsage of job (MB)
+	269672  -  ResidentSetSize of job (KB)
 ...
-022 (263423.000.000) 2025-01-17 11:34:25 Job disconnected, attempting to reconnect
-    Socket between submit and execute hosts closed unexpectedly
-    Trying to reconnect to slot1_16@node137.di.rm1 <192.168.0.137:9618?addrs=192.168.0.137-9618&alias=node137.di.rm1&noUDP&sock=startd_1934_2440>
+006 (269810.000.000) 2025-01-21 23:08:55 Image size of job updated: 286848
+	264  -  MemoryUsage of job (MB)
+	269672  -  ResidentSetSize of job (KB)
 ...
-023 (263423.000.000) 2025-01-17 12:11:14 Job reconnected to slot1_16@node137.di.rm1
-    startd address: <192.168.0.137:9618?addrs=192.168.0.137-9618&alias=node137.di.rm1&noUDP&sock=startd_1934_2440>
-    starter address: <192.168.0.137:9618?addrs=192.168.0.137-9618&alias=node137.di.rm1&noUDP&sock=slot1_16_2127_69f0_20265>
-...
-004 (263423.000.000) 2025-01-17 12:11:15 Job was evicted.
+004 (269810.000.000) 2025-01-21 23:08:55 Job was evicted.
 	(0) CPU times
-		Usr 0 00:47:14, Sys 0 00:19:52  -  Run Remote Usage
+		Usr 0 00:01:57, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     1.96        1         1 
-	   Disk (KB)            :    27          27    391050 
-	   Memory (MB)          :   262           1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    467548 
+	   Memory (MB)          :      264        1       128 
 ...
-009 (263423.000.000) 2025-01-17 12:11:15 Job was aborted.
+009 (269810.000.000) 2025-01-21 23:08:55 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

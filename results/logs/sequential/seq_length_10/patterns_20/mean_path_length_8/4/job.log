@@ -1,20 +1,16 @@
-000 (262434.000.000) 2025-01-17 11:14:12 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (268207.000.000) 2025-01-21 21:39:44 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (262434.000.000) 2025-01-17 11:14:29 Job executing on host: <192.168.0.116:9618?addrs=192.168.0.116-9618&alias=node116.di.rm1&noUDP&sock=startd_1847_7783>
+001 (268207.000.000) 2025-01-21 21:39:54 Job executing on host: <192.168.0.107:9618?addrs=192.168.0.107-9618&alias=node107.di.rm1&noUDP&sock=startd_1981_6134>
 ...
-006 (262434.000.000) 2025-01-17 11:14:38 Image size of job updated: 604588
+006 (268207.000.000) 2025-01-21 21:40:03 Image size of job updated: 603704
 	590  -  MemoryUsage of job (MB)
-	603664  -  ResidentSetSize of job (KB)
+	603704  -  ResidentSetSize of job (KB)
 ...
-006 (262434.000.000) 2025-01-17 11:14:43 Image size of job updated: 607940
-	590  -  MemoryUsage of job (MB)
-	603664  -  ResidentSetSize of job (KB)
-...
-005 (262434.000.000) 2025-01-17 11:14:43 Job terminated.
+005 (268207.000.000) 2025-01-21 21:40:11 Job terminated.
 	(1) Normal termination (return value 0)
-		Usr 0 00:00:13, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:15, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:00:13, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:15, Sys 0 00:00:00  -  Total Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
@@ -22,8 +18,37 @@
 	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
 	   Cpus                 :                 1         1 
-	   Disk (KB)            :       27       27    474557 
+	   Disk (KB)            :       27       27    471963 
 	   Memory (MB)          :      590        1       128 
 
-	Job terminated of its own accord at 2025-01-17T11:14:43Z with exit-code 0.
+	Job terminated of its own accord at 2025-01-21T21:40:11Z with exit-code 0.
+...
+000 (268393.000.000) 2025-01-21 21:46:32 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (268393.000.000) 2025-01-21 21:46:33 Job executing on host: <192.168.0.130:9618?addrs=192.168.0.130-9618&alias=node130.di.rm1&noUDP&sock=startd_2751195_838e>
+...
+006 (268393.000.000) 2025-01-21 21:46:42 Image size of job updated: 604012
+	590  -  MemoryUsage of job (MB)
+	604012  -  ResidentSetSize of job (KB)
+...
+006 (268393.000.000) 2025-01-21 21:46:51 Image size of job updated: 607940
+	590  -  MemoryUsage of job (MB)
+	604012  -  ResidentSetSize of job (KB)
+...
+005 (268393.000.000) 2025-01-21 21:46:51 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:16, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:16, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	0  -  Total Bytes Sent By Job
+	0  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    472313 
+	   Memory (MB)          :      590        1       128 
+
+	Job terminated of its own accord at 2025-01-21T21:46:51Z with exit-code 0.
 ...

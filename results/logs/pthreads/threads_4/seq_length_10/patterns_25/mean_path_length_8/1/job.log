@@ -1,34 +1,26 @@
-000 (263671.000.000) 2025-01-17 11:21:01 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270058.000.000) 2025-01-21 23:25:41 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (263671.000.000) 2025-01-17 11:21:05 Job executing on host: <192.168.0.116:9618?addrs=192.168.0.116-9618&alias=node116.di.rm1&noUDP&sock=startd_1847_7783>
+001 (270058.000.000) 2025-01-21 23:25:42 Job executing on host: <192.168.0.148:9618?addrs=192.168.0.148-9618&alias=node148.di.rm1&noUDP&sock=startd_1547_b119>
 ...
-006 (263671.000.000) 2025-01-17 11:21:13 Image size of job updated: 1489032
-	449  -  MemoryUsage of job (MB)
-	459228  -  ResidentSetSize of job (KB)
+006 (270058.000.000) 2025-01-21 23:25:50 Image size of job updated: 473232
+	459  -  MemoryUsage of job (MB)
+	469932  -  ResidentSetSize of job (KB)
 ...
-006 (263671.000.000) 2025-01-17 11:26:13 Image size of job updated: 9894000
-	8964  -  MemoryUsage of job (MB)
-	9179056  -  ResidentSetSize of job (KB)
+006 (270058.000.000) 2025-01-21 23:26:43 Image size of job updated: 4085604
+	460  -  MemoryUsage of job (MB)
+	470460  -  ResidentSetSize of job (KB)
 ...
-006 (263671.000.000) 2025-01-17 11:30:24 Image size of job updated: 10030884
-	8970  -  MemoryUsage of job (MB)
-	9184732  -  ResidentSetSize of job (KB)
-...
-005 (263671.000.000) 2025-01-17 11:30:25 Job terminated.
-	(0) Abnormal termination (signal 9)
-	(0) No core file
-		Usr 0 00:03:46, Sys 0 00:01:25  -  Run Remote Usage
+004 (270058.000.000) 2025-01-21 23:26:43 Job was evicted.
+	(0) CPU times
+		Usr 0 00:01:00, Sys 0 00:00:01  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:03:46, Sys 0 00:01:25  -  Total Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
-	0  -  Total Bytes Sent By Job
-	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     0.42        1         1 
-	   Disk (KB)            :    27          27    474557 
-	   Memory (MB)          :  8970           1       128 
-
-	Job terminated of its own accord at 2025-01-17T11:30:24Z with signal 9.
+	   Cpus                 :     1.00        1         1 
+	   Disk (KB)            :    27          27    467548 
+	   Memory (MB)          :   460           1       128 
+...
+009 (270058.000.000) 2025-01-21 23:26:43 Job was aborted.
+	via condor_rm (by user calzona_2046920)
 ...

@@ -1,25 +1,26 @@
-000 (263376.000.000) 2025-01-17 11:20:48 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (269763.000.000) 2025-01-21 23:02:45 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (263376.000.000) 2025-01-17 11:20:55 Job executing on host: <192.168.0.141:9618?addrs=192.168.0.141-9618&alias=node141.di.rm1&noUDP&sock=startd_2077_3a4b>
+001 (269763.000.000) 2025-01-21 23:02:47 Job executing on host: <192.168.0.151:9618?addrs=192.168.0.151-9618&alias=node151.di.rm1&noUDP&sock=startd_1528_a8cd>
 ...
-006 (263376.000.000) 2025-01-17 11:21:03 Image size of job updated: 40260
+006 (269763.000.000) 2025-01-21 23:02:56 Image size of job updated: 24024
 	24  -  MemoryUsage of job (MB)
-	24288  -  ResidentSetSize of job (KB)
+	24024  -  ResidentSetSize of job (KB)
 ...
-005 (263376.000.000) 2025-01-17 11:24:28 Job terminated.
-	(1) Normal termination (return value 0)
-		Usr 0 00:05:14, Sys 0 00:00:00  -  Run Remote Usage
+006 (269763.000.000) 2025-01-21 23:03:47 Image size of job updated: 40260
+	24  -  MemoryUsage of job (MB)
+	24024  -  ResidentSetSize of job (KB)
+...
+004 (269763.000.000) 2025-01-21 23:03:47 Job was evicted.
+	(0) CPU times
+		Usr 0 00:01:56, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:05:14, Sys 0 00:00:00  -  Total Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
-	0  -  Total Bytes Sent By Job
-	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     1.35        1         1 
-	   Disk (KB)            :    27          27    459831 
+	   Cpus                 :     1.99        1         1 
+	   Disk (KB)            :    27          27    474791 
 	   Memory (MB)          :    24           1       128 
-
-	Job terminated of its own accord at 2025-01-17T11:24:27Z with exit-code 0.
+...
+009 (269763.000.000) 2025-01-21 23:03:47 Job was aborted.
+	via condor_rm (by user calzona_2046920)
 ...

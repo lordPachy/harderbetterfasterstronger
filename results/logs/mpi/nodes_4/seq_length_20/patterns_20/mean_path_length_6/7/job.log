@@ -1,0 +1,15 @@
+000 (274252.000.000) 2025-01-23 11:44:43 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+007 (274252.000.000) 2025-01-23 11:45:07 Shadow exception!
+	Can't connect to schedd at <192.168.0.102:1627?alias=submitter>
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+...
+007 (274252.000.000) 2025-01-23 11:45:22 Shadow exception!
+	JobReconnectFailedEvent::formatBody() called without startd_name
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+...
+009 (274252.000.000) 2025-01-23 11:46:01 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+...

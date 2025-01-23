@@ -1,25 +1,22 @@
-000 (264590.000.000) 2025-01-17 11:21:27 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270982.000.000) 2025-01-22 00:30:24 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (264590.000.000) 2025-01-17 11:21:33 Job executing on host: <192.168.0.145:9618?addrs=192.168.0.145-9618&alias=node145.di.rm1&noUDP&sock=startd_1869_8e98>
+001 (270982.000.000) 2025-01-22 00:30:25 Job executing on host: <192.168.0.147:9618?addrs=192.168.0.147-9618&alias=node147.di.rm1&noUDP&sock=startd_1513_5ee1>
 ...
-006 (264590.000.000) 2025-01-17 11:21:43 Image size of job updated: 126408
-	77  -  MemoryUsage of job (MB)
-	78144  -  ResidentSetSize of job (KB)
+006 (270982.000.000) 2025-01-22 00:30:34 Image size of job updated: 126408
+	80  -  MemoryUsage of job (MB)
+	81048  -  ResidentSetSize of job (KB)
 ...
-005 (264590.000.000) 2025-01-17 11:24:44 Job terminated.
-	(1) Normal termination (return value 0)
-		Usr 0 00:05:56, Sys 0 00:00:00  -  Run Remote Usage
+004 (270982.000.000) 2025-01-22 00:31:26 Job was evicted.
+	(0) CPU times
+		Usr 0 00:03:22, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:05:56, Sys 0 00:00:00  -  Total Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
-	0  -  Total Bytes Sent By Job
-	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     1.32        1         1 
-	   Disk (KB)            :    27          27    462663 
-	   Memory (MB)          :    77           1       128 
-
-	Job terminated of its own accord at 2025-01-17T11:24:44Z with exit-code 0.
+	   Cpus                 :     3.40        1         1 
+	   Disk (KB)            :    27          27    469805 
+	   Memory (MB)          :    80           1       128 
+...
+009 (270982.000.000) 2025-01-22 00:31:26 Job was aborted.
+	via condor_rm (by user calzona_2046920)
 ...

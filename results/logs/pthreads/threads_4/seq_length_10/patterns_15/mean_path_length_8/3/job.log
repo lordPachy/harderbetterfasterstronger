@@ -1,16 +1,16 @@
-000 (263593.000.000) 2025-01-17 11:20:58 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (269980.000.000) 2025-01-21 23:20:56 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (263593.000.000) 2025-01-17 11:21:02 Job executing on host: <192.168.0.106:9618?addrs=192.168.0.106-9618&alias=node106.di.rm1&noUDP&sock=startd_1970_d5a9>
+001 (269980.000.000) 2025-01-21 23:21:11 Job executing on host: <192.168.0.148:9618?addrs=192.168.0.148-9618&alias=node148.di.rm1&noUDP&sock=startd_1547_b119>
 ...
-006 (263593.000.000) 2025-01-17 11:21:03 Image size of job updated: 27
-	0  -  MemoryUsage of job (MB)
-	0  -  ResidentSetSize of job (KB)
+006 (269980.000.000) 2025-01-21 23:21:11 Image size of job updated: 3420
+	1  -  MemoryUsage of job (MB)
+	384  -  ResidentSetSize of job (KB)
 ...
-005 (263593.000.000) 2025-01-17 11:21:03 Job terminated.
+005 (269980.000.000) 2025-01-21 23:21:11 Job terminated.
 	(1) Normal termination (return value 0)
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Total Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
@@ -18,8 +18,8 @@
 	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
 	   Cpus                 :                 1         1 
-	   Disk (KB)            :       27       27    468979 
-	   Memory (MB)          :        0        1       128 
+	   Disk (KB)            :       27       27    467548 
+	   Memory (MB)          :        1        1       128 
 
-	Job terminated of its own accord at 2025-01-17T11:21:03Z with exit-code 0.
+	Job terminated of its own accord at 2025-01-21T23:21:11Z with exit-code 0.
 ...

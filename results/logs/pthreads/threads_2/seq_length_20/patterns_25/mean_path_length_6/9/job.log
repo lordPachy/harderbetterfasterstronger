@@ -1,26 +1,26 @@
-000 (263489.000.000) 2025-01-17 11:20:55 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (269876.000.000) 2025-01-21 23:14:03 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (263489.000.000) 2025-01-17 11:20:56 Job executing on host: <192.168.0.135:9618?addrs=192.168.0.135-9618&alias=node135.di.rm1&noUDP&sock=startd_2000_6980>
+001 (269876.000.000) 2025-01-21 23:14:08 Job executing on host: <192.168.0.151:9618?addrs=192.168.0.151-9618&alias=node151.di.rm1&noUDP&sock=startd_1528_a8cd>
 ...
-006 (263489.000.000) 2025-01-17 11:21:05 Image size of job updated: 1424552
-	478  -  MemoryUsage of job (MB)
-	488928  -  ResidentSetSize of job (KB)
+006 (269876.000.000) 2025-01-21 23:14:18 Image size of job updated: 548724
+	536  -  MemoryUsage of job (MB)
+	548724  -  ResidentSetSize of job (KB)
 ...
-006 (263489.000.000) 2025-01-17 11:26:36 Image size of job updated: 8446608
-	7940  -  MemoryUsage of job (MB)
-	8129560  -  ResidentSetSize of job (KB)
+006 (269876.000.000) 2025-01-21 23:15:06 Image size of job updated: 3140208
+	539  -  MemoryUsage of job (MB)
+	551232  -  ResidentSetSize of job (KB)
 ...
-004 (263489.000.000) 2025-01-17 11:33:32 Job was evicted.
+004 (269876.000.000) 2025-01-21 23:15:06 Job was evicted.
 	(0) CPU times
-		Usr 0 00:10:21, Sys 0 00:04:12  -  Run Remote Usage
+		Usr 0 00:00:53, Sys 0 00:00:01  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     1.88        1         1 
-	   Disk (KB)            :    27          27    470875 
-	   Memory (MB)          :  7940           1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    474791 
+	   Memory (MB)          :      539        1       128 
 ...
-009 (263489.000.000) 2025-01-17 11:33:32 Job was aborted.
+009 (269876.000.000) 2025-01-21 23:15:06 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

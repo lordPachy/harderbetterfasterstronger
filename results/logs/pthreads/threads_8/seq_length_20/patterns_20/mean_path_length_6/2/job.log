@@ -1,22 +1,26 @@
-000 (264622.000.000) 2025-01-17 11:21:28 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (271014.000.000) 2025-01-22 00:34:31 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (264622.000.000) 2025-01-17 11:21:36 Job executing on host: <192.168.0.146:9618?addrs=192.168.0.146-9618&alias=node146.di.rm1&noUDP&sock=startd_1984_6ffc>
+001 (271014.000.000) 2025-01-22 00:34:32 Job executing on host: <192.168.0.148:9618?addrs=192.168.0.148-9618&alias=node148.di.rm1&noUDP&sock=startd_1547_b119>
 ...
-006 (264622.000.000) 2025-01-17 11:21:45 Image size of job updated: 323760
-	261  -  MemoryUsage of job (MB)
-	266868  -  ResidentSetSize of job (KB)
+006 (271014.000.000) 2025-01-22 00:34:40 Image size of job updated: 276020
+	269  -  MemoryUsage of job (MB)
+	274436  -  ResidentSetSize of job (KB)
 ...
-004 (264622.000.000) 2025-01-17 11:33:29 Job was evicted.
+006 (271014.000.000) 2025-01-22 00:35:33 Image size of job updated: 323760
+	269  -  MemoryUsage of job (MB)
+	274568  -  ResidentSetSize of job (KB)
+...
+004 (271014.000.000) 2025-01-22 00:35:33 Job was evicted.
 	(0) CPU times
-		Usr 0 00:10:58, Sys 0 00:07:31  -  Run Remote Usage
+		Usr 0 00:07:39, Sys 0 00:00:01  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     1.77        1         1 
-	   Disk (KB)            :    27          27    466414 
-	   Memory (MB)          :   261           1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    467548 
+	   Memory (MB)          :      269        1       128 
 ...
-009 (264622.000.000) 2025-01-17 11:33:29 Job was aborted.
+009 (271014.000.000) 2025-01-22 00:35:33 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

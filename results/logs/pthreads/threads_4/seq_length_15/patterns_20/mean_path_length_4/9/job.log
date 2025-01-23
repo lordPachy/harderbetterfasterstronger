@@ -1,29 +1,26 @@
-000 (263799.000.000) 2025-01-17 11:21:04 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270186.000.000) 2025-01-21 23:31:02 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (263799.000.000) 2025-01-17 11:21:12 Job executing on host: <192.168.0.137:9618?addrs=192.168.0.137-9618&alias=node137.di.rm1&noUDP&sock=startd_1934_2440>
+001 (270186.000.000) 2025-01-21 23:31:09 Job executing on host: <192.168.0.139:9618?addrs=192.168.0.139-9618&alias=node139.di.rm1&noUDP&sock=startd_1966_1748>
 ...
-006 (263799.000.000) 2025-01-17 11:21:21 Image size of job updated: 365924
-	323  -  MemoryUsage of job (MB)
-	330660  -  ResidentSetSize of job (KB)
+006 (270186.000.000) 2025-01-21 23:31:17 Image size of job updated: 393536
+	382  -  MemoryUsage of job (MB)
+	390632  -  ResidentSetSize of job (KB)
 ...
-006 (263799.000.000) 2025-01-17 11:26:21 Image size of job updated: 9795304
-	9513  -  MemoryUsage of job (MB)
-	9741040  -  ResidentSetSize of job (KB)
+006 (270186.000.000) 2025-01-21 23:32:03 Image size of job updated: 2458148
+	383  -  MemoryUsage of job (MB)
+	391820  -  ResidentSetSize of job (KB)
 ...
-005 (263799.000.000) 2025-01-17 11:27:06 Job terminated.
-	(1) Normal termination (return value 0)
-		Usr 0 00:08:20, Sys 0 00:00:10  -  Run Remote Usage
+004 (270186.000.000) 2025-01-21 23:32:03 Job was evicted.
+	(0) CPU times
+		Usr 0 00:00:53, Sys 0 00:00:01  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:08:20, Sys 0 00:00:10  -  Total Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
-	0  -  Total Bytes Sent By Job
-	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     1.00        1         1 
-	   Disk (KB)            :    27          27    391050 
-	   Memory (MB)          :  9513           1       128 
-
-	Job terminated of its own accord at 2025-01-17T11:27:05Z with exit-code 0.
+	   Cpus                 :        0        1         1 
+	   Disk (KB)            :       27       27    460637 
+	   Memory (MB)          :      383        1       128 
+...
+009 (270186.000.000) 2025-01-21 23:32:04 Job was aborted.
+	via condor_rm (by user calzona_2046920)
 ...

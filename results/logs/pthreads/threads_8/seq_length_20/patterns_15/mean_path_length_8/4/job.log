@@ -1,25 +1,25 @@
-000 (264574.000.000) 2025-01-17 11:21:27 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (270966.000.000) 2025-01-22 00:29:22 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-001 (264574.000.000) 2025-01-17 11:21:34 Job executing on host: <192.168.0.134:9618?addrs=192.168.0.134-9618&alias=node134.di.rm1&noUDP&sock=startd_2073_7bea>
+001 (270966.000.000) 2025-01-22 00:29:42 Job executing on host: <192.168.0.147:9618?addrs=192.168.0.147-9618&alias=node147.di.rm1&noUDP&sock=startd_1513_5ee1>
 ...
-006 (264574.000.000) 2025-01-17 11:21:43 Image size of job updated: 77172
-	29  -  MemoryUsage of job (MB)
-	28776  -  ResidentSetSize of job (KB)
+006 (270966.000.000) 2025-01-22 00:29:51 Image size of job updated: 77172
+	38  -  MemoryUsage of job (MB)
+	38280  -  ResidentSetSize of job (KB)
 ...
-005 (264574.000.000) 2025-01-17 11:27:59 Job terminated.
+005 (270966.000.000) 2025-01-22 00:30:15 Job terminated.
 	(1) Normal termination (return value 0)
-		Usr 0 00:06:03, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:04:20, Sys 0 00:00:00  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:06:03, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:04:20, Sys 0 00:00:00  -  Total Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
 	0  -  Run Bytes Sent By Job
 	0  -  Run Bytes Received By Job
 	0  -  Total Bytes Sent By Job
 	0  -  Total Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :     1.39        1         1 
-	   Disk (KB)            :    27          27    474253 
-	   Memory (MB)          :    29           1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    469805 
+	   Memory (MB)          :       38        1       128 
 
-	Job terminated of its own accord at 2025-01-17T11:25:19Z with exit-code 0.
+	Job terminated of its own accord at 2025-01-22T00:30:15Z with exit-code 0.
 ...
