@@ -15,7 +15,7 @@ done
 printf "Waiting up to 1 minute...\n"
 time=0
 check="$(condor_q -nobatch | wc -l)"
-while [ $time -lt  60 ] && [ $check -gt 9 ]
+while [ $time -lt  40 ] && [ $check -gt 9 ]
 do
 sleep 5s
 ((time+=5))

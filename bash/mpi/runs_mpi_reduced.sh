@@ -3,8 +3,8 @@
 printf ".....................................................\n"
 printf "MPI JOB RUNNING\n"
 printf ".....................................................\n"
-for num_nodes in 2; do
-for seq_length in 10; do
+for num_nodes in 2 4 8; do
+for seq_length in 20; do
 for num_patterns in 10; do
 for pattern_mean_length in 4; do
 if [ ${seq_length} -ge ${pattern_mean_length} ]; then
