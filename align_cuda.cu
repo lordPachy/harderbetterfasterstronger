@@ -16,6 +16,7 @@
 #include<string.h>
 #include<limits.h>
 #include<sys/time.h>
+#include<stdbool.h>
 
 /* Headers for the CUDA assignment versions */
 #include<cuda.h>
@@ -54,7 +55,13 @@ double cp_Wtime(){
  */
 /* ADD KERNELS AND OTHER FUNCTIONS HERE */
 //define kernel
-	__global__ void find_patterns(unsigned long *seq_len, char *sequence, char **patterns, unsigned long *pattern_found, unsigned long *pat_length){
+/*parallelize on input and patterns:
+no use of shared mem
+cannot handle patterns bigger than max block size
+block: 1024, grid: pat_number
+*/ 
+
+	__global__ void find_patterns_v1(unsigned long *seq_len, char *sequence, char **patterns, unsigned long *pattern_found, unsigned long *pat_length){
 		int pat = blockIdx.x;
 		unsigned long idx = (unsigned long)((*seq_len / blockDim.x) * threadIdx.x);
 		unsigned long i,j;
@@ -68,6 +75,62 @@ double cp_Wtime(){
 			if(j==pat_length[pat]){
 				pattern_found[pat] = i;
 				return;
+			}
+		}
+	}
+/*
+grid = (pat_number, however many blocks I need for a pattern)
+block = 1024
+*/
+	__global__ void find_patterns(
+		unsigned long *seq_len, 
+		char *sequence, 
+		char **patterns, 
+		unsigned long *pattern_found, 
+		unsigned long *pat_length, 
+		bool **g_isTheSame)
+		{
+		unsigned long pat = blockIdx.x;
+		unsigned long idx = blockIdx.y*blockDim.x + threadIdx.x;
+		unsigned long i=0;
+		// array for reduction
+		//TODO assign less memory to last block
+		//unsigned long portionedShared = blockDim.x;//(pat_length[pat] - gridDim.y*blockDim.x);
+		extern __shared__ bool s[];
+		bool *isTheSame = s;
+		bool *aggregateIsTheSame = (bool *)&isTheSame[1024];
+
+		for(; i<*seq_len - pat_length[pat] + 1; i++){
+			isTheSame[idx] = ((patterns[pat][idx] == sequence[idx+i]) && idx<pat_length[pat]);
+			__syncthreads();
+			
+
+			//aggregate infrablock
+			for(int r=pat_length[pat]/2; r>0; r /= 2){
+				if(idx<pat_length[pat]){
+					isTheSame[threadIdx.x] *=  isTheSame[threadIdx.x + r];
+				}
+				__syncthreads();
+			} 
+			
+			//aggregate interblock
+			if(threadIdx.x == 0) g_isTheSame[pat][blockIdx.y] = isTheSame[threadIdx.x];
+			if(blockIdx.y == 0){
+				if(threadIdx.x < gridDim.y){
+					aggregateIsTheSame[threadIdx.x] =  g_isTheSame[pat][threadIdx.x];
+				}
+				__syncthreads();
+					
+				for(int r=gridDim.y/2; r>0; r /= 2){
+					if(threadIdx.x < gridDim.y){
+						aggregateIsTheSame[threadIdx.x] *= aggregateIsTheSame[threadIdx.x + r];
+					}
+					__syncthreads();
+				}
+				if(threadIdx.x == 0 && aggregateIsTheSame[0]==1){
+					pattern_found[pat] = i;
+					return;
+				}
 			}
 		}
 	}
@@ -410,32 +473,42 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* 5. Search for each pattern */
-
-    char* d_sequence; 
-	unsigned long *d_pat_found_cuda;
-	unsigned long *d_seq_length;
-
-	CUDA_CHECK_FUNCTION(cudaMalloc(&d_sequence, sizeof(char) * seq_length));
-	CUDA_CHECK_FUNCTION(cudaMalloc(&d_pat_found_cuda, sizeof(unsigned long) * pat_number));
-	CUDA_CHECK_FUNCTION(cudaMalloc(&d_seq_length, sizeof(unsigned long)));
-	
-	CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_length,  pat_length, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
-	CUDA_CHECK_FUNCTION(cudaMemcpy( d_sequence, sequence, sizeof(char) * seq_length, cudaMemcpyHostToDevice));
-    CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_found_cuda,  pat_found, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
-	CUDA_CHECK_FUNCTION(cudaMemcpy( d_seq_length, &seq_length, sizeof(unsigned long), cudaMemcpyHostToDevice));
-
 	// identify longest pattern to assign resources
 	unsigned long longest = 0;
     for(int pat = 0; pat<pat_number; pat++){
 		if( pat_length[pat] > longest){
 			longest = pat_length[pat];
+			
 		}
 	}
 	// 1024 is max threads per block on cluster
 	int block = 1024;
-	int grid = pat_number;
+	dim3 grid(pat_number,(int)ceil((double)longest/block));
 
-	find_patterns<<<grid, block>>>(d_seq_length, d_sequence, d_pattern, d_pat_found_cuda, d_pat_length);
+    char* d_sequence; 
+	unsigned long *d_pat_found_cuda;
+	unsigned long *d_seq_length;
+	bool **d_isTheSame;
+
+	CUDA_CHECK_FUNCTION(cudaMalloc(&d_sequence, sizeof(char) * seq_length));
+	CUDA_CHECK_FUNCTION(cudaMalloc(&d_pat_found_cuda, sizeof(unsigned long) * pat_number));
+	CUDA_CHECK_FUNCTION(cudaMalloc(&d_seq_length, sizeof(unsigned long)));
+	CUDA_CHECK_FUNCTION(cudaMalloc(&d_isTheSame, sizeof(bool*) * pat_number));
+
+	// manually copying nested list
+	bool **host_isTheSame = (bool**)malloc(sizeof(bool*) * pat_number);
+	for(int pat = 0; pat < pat_number; pat++){
+		CUDA_CHECK_FUNCTION(cudaMalloc(&host_isTheSame[pat], sizeof(bool) * grid.y));
+	}
+	CUDA_CHECK_FUNCTION(cudaMemcpy( d_isTheSame, host_isTheSame, sizeof(bool*) * pat_number, cudaMemcpyHostToDevice));
+
+	CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_length,  pat_length, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
+	CUDA_CHECK_FUNCTION(cudaMemcpy( d_sequence, sequence, sizeof(char) * seq_length, cudaMemcpyHostToDevice));
+    CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_found_cuda,  pat_found, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
+	CUDA_CHECK_FUNCTION(cudaMemcpy( d_seq_length, &seq_length, sizeof(unsigned long), cudaMemcpyHostToDevice));
+
+	find_patterns<<<grid, block, 1024*sizeof(bool)+grid.y*sizeof(bool)>>>
+	(d_seq_length, d_sequence, d_pattern, d_pat_found_cuda, d_pat_length, d_isTheSame);
 	CUDA_CHECK_KERNEL();
 
 	//update the result vector
