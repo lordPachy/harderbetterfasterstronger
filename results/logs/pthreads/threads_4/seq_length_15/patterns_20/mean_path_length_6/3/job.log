@@ -24,3 +24,32 @@
 009 (270190.000.000) 2025-01-21 23:33:06 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...
+000 (276348.000.000) 2025-01-24 04:18:56 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (276348.000.000) 2025-01-24 04:18:56 Job executing on host: <192.168.0.151:9618?addrs=192.168.0.151-9618&alias=node151.di.rm1&noUDP&sock=startd_1528_a8cd>
+...
+006 (276348.000.000) 2025-01-24 04:19:05 Image size of job updated: 213180
+	209  -  MemoryUsage of job (MB)
+	213180  -  ResidentSetSize of job (KB)
+...
+006 (276348.000.000) 2025-01-24 04:20:05 Image size of job updated: 225592
+	209  -  MemoryUsage of job (MB)
+	213180  -  ResidentSetSize of job (KB)
+...
+005 (276348.000.000) 2025-01-24 04:20:05 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:04:21, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:04:21, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	0  -  Total Bytes Sent By Job
+	0  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    474791 
+	   Memory (MB)          :      209        1       128 
+
+	Job terminated of its own accord at 2025-01-24T04:20:05Z with exit-code 0.
+...
