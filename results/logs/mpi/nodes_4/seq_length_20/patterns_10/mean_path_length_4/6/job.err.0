@@ -15,6 +15,6 @@ WARNING: There was an error initializing an OpenFabrics device.
   Local host:   node147
   Local device: ibp129s0
 --------------------------------------------------------------------------
-[node141:2250466] 3 more processes have sent help message help-mpi-btl-openib.txt / ib port not selected
-[node141:2250466] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
-[node141:2250466] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[node130:1220808] 3 more processes have sent help message help-mpi-btl-openib.txt / ib port not selected
+[node130:1220808] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[node130:1220808] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init

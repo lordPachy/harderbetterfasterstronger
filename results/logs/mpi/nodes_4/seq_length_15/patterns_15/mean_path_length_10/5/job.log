@@ -76,3 +76,93 @@
 
 	Job terminated of its own accord at 2025-01-23T11:29:53Z with exit-code 0.
 ...
+000 (278732.000.000) 2025-01-24 09:19:36 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+014 (278732.000.000) 2025-01-24 09:19:44 Node 0 executing on host: <192.168.0.111:9618?addrs=192.168.0.111-9618&alias=node111.di.rm1&noUDP&sock=startd_2044_97ab>
+...
+014 (278732.000.001) 2025-01-24 09:19:44 Node 1 executing on host: <192.168.0.147:9618?addrs=192.168.0.147-9618&alias=node147.di.rm1&noUDP&sock=startd_1513_5ee1>
+...
+014 (278732.000.002) 2025-01-24 09:19:44 Node 2 executing on host: <192.168.0.151:9618?addrs=192.168.0.151-9618&alias=node151.di.rm1&noUDP&sock=startd_1528_a8cd>
+...
+014 (278732.000.003) 2025-01-24 09:19:44 Node 3 executing on host: <192.168.0.132:9618?addrs=192.168.0.132-9618&alias=node132.di.rm1&noUDP&sock=startd_1999_b9e8>
+...
+001 (278732.000.000) 2025-01-24 09:19:44 Job executing on host: MPI_job
+...
+008 (278732.000.000) 2025-01-24 09:19:46 Launching orted on Node 1 of 4
+...
+008 (278732.000.000) 2025-01-24 09:19:46 Launching orted on Node 3 of 4
+...
+008 (278732.000.000) 2025-01-24 09:19:46 Launching orted on Node 0 of 4
+...
+008 (278732.000.000) 2025-01-24 09:19:46 Launching orted on Node 2 of 4
+...
+008 (278732.000.000) 2025-01-24 09:19:50 orted exited on Node 1 of 4
+...
+008 (278732.000.000) 2025-01-24 09:19:50 orted exited on Node 2 of 4
+...
+008 (278732.000.000) 2025-01-24 09:19:50 orted exited on Node 3 of 4
+...
+008 (278732.000.000) 2025-01-24 09:19:50 orted exited on Node 0 of 4
+...
+015 (278732.000.001) 2025-01-24 09:19:50 Node 1 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:03, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:03, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2165  -  Run Bytes Sent By Node
+	33639  -  Run Bytes Received By Node
+	2165  -  Total Bytes Sent By Node
+	33639  -  Total Bytes Received By Node
+...
+015 (278732.000.003) 2025-01-24 09:19:50 Node 3 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:04, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:04, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2165  -  Run Bytes Sent By Node
+	33639  -  Run Bytes Received By Node
+	2165  -  Total Bytes Sent By Node
+	33639  -  Total Bytes Received By Node
+...
+015 (278732.000.002) 2025-01-24 09:19:50 Node 2 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:03, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:03, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2165  -  Run Bytes Sent By Node
+	33639  -  Run Bytes Received By Node
+	2165  -  Total Bytes Sent By Node
+	33639  -  Total Bytes Received By Node
+...
+015 (278732.000.000) 2025-01-24 09:19:51 Node 0 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	3304  -  Run Bytes Sent By Node
+	33639  -  Run Bytes Received By Node
+	3304  -  Total Bytes Sent By Node
+	33639  -  Total Bytes Received By Node
+...
+005 (278732.000.000) 2025-01-24 09:19:51 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:10, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	9799  -  Run Bytes Sent By Job
+	134556  -  Run Bytes Received By Job
+	9799  -  Total Bytes Sent By Job
+	134556  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       50       35    468058 
+	   GPUs                 :                           0 
+	   Memory (MB)          :        0        0     40960 
+
+	Job terminated of its own accord at 2025-01-24T09:19:50Z with exit-code 0.
+...
