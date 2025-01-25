@@ -1,7 +1,7 @@
 #!/bin/bash
 
-mv mpi/jobs.sh jobs/mpi
-mv mpi/logs.sh logs/mpi
-mv mpi/runs* ./
+mv mpi_exp/jobs.sh jobs/mpi_exp
+mv mpi_exp/logs.sh logs/mpi_exp
+mv mpi_exp/runs* ./
 
 

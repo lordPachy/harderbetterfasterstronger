@@ -426,20 +426,14 @@ int main(int argc, char *argv[]) {
 			displs[i] = start_idx;
 		}
 
-		printf("Rank %d has started gathering...\n", rank);
-		int val = MPI_Gatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, recvcounts, displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
-		printf("Rank %d Igatherv has returned value %d\n", rank, val);
+		MPI_Igatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, recvcounts, displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req[0]);
 
 		/* 6.2. Matches in the sequence (seq_matches) */
 		seq_matches[seq_length] = pat_matches;
-		printf("Rank %d has started reducing...\n", rank);
-		val = MPI_Reduce(MPI_IN_PLACE, seq_matches, seq_length + 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-		printf("Rank %d Ireduce has returned value %d\n", rank, val);
+		MPI_Ireduce(MPI_IN_PLACE, seq_matches, seq_length + 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD, &comm_req[1]);
 
 		//Waiting for results
-		//printf("Everything ok from rank %d...: 0\n", rank);
-		//val = MPI_Waitall(2, comm_req, MPI_STATUSES_IGNORE);
-		//printf("Rank %d Waitall has returned value %d\n", rank, val);
+		MPI_Waitall(2, comm_req, MPI_STATUSES_IGNORE);
 		// Reporting results on the original variables
 		pat_matches = seq_matches[seq_length];
 
@@ -450,13 +444,10 @@ int main(int argc, char *argv[]) {
 	} else {
 		/* 6.5. Sending data from non-master processes */
 		seq_matches[seq_length] = pat_matches;
-		int val = MPI_Igatherv(&pat_found[start_idx], end_idx-start_idx, MPI_UNSIGNED_LONG, NULL, NULL, NULL, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req[0]);
-		printf("Rank %d Igatherv has returned value %d\n", rank, val);
-		val = MPI_Ireduce(seq_matches, NULL, seq_length + 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD, &comm_req[1]);
-		printf("Rank %d Ireduce has returned value %d\n", rank, val);
+		MPI_Igatherv(&pat_found[start_idx], end_idx-start_idx, MPI_UNSIGNED_LONG, NULL, NULL, NULL, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req[0]);
+		MPI_Ireduce(seq_matches, NULL, seq_length + 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD, &comm_req[1]);
 		// Waiting for results
-		val = MPI_Waitall(2, comm_req, MPI_STATUSES_IGNORE);
-		printf("Rank %d Waitall has returned value %d\n", rank, val);
+		MPI_Waitall(2, comm_req, MPI_STATUSES_IGNORE);
 	}
 
 	/* 7. Check sums */
