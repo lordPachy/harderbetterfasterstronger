@@ -1,0 +1,4 @@
+1. No errors
+2. All tests terminated on sequential terminated on the given method
+3. All tests where run
+4. No other errors were found

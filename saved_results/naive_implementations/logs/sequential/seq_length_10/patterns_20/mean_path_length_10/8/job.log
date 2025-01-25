@@ -1,0 +1,85 @@
+000 (268231.000.000) 2025-01-21 21:40:15 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (268231.000.000) 2025-01-21 21:40:33 Job executing on host: <192.168.0.105:9618?addrs=192.168.0.105-9618&alias=node105.di.rm1&noUDP&sock=startd_1951_cd5c>
+...
+006 (268231.000.000) 2025-01-21 21:40:42 Image size of job updated: 616176
+	602  -  MemoryUsage of job (MB)
+	616176  -  ResidentSetSize of job (KB)
+...
+006 (268231.000.000) 2025-01-21 21:40:58 Image size of job updated: 1649736
+	602  -  MemoryUsage of job (MB)
+	616308  -  ResidentSetSize of job (KB)
+...
+004 (268231.000.000) 2025-01-21 21:40:58 Job was evicted.
+	(0) CPU times
+		Usr 0 00:00:24, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    472026 
+	   Memory (MB)          :      602        1       128 
+...
+009 (268231.000.000) 2025-01-21 21:40:58 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+...
+000 (268421.000.000) 2025-01-21 21:46:59 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (268421.000.000) 2025-01-21 21:47:12 Job executing on host: <192.168.0.139:9618?addrs=192.168.0.139-9618&alias=node139.di.rm1&noUDP&sock=startd_1966_1748>
+...
+006 (268421.000.000) 2025-01-21 21:47:21 Image size of job updated: 738340
+	719  -  MemoryUsage of job (MB)
+	735436  -  ResidentSetSize of job (KB)
+...
+006 (268421.000.000) 2025-01-21 21:47:38 Image size of job updated: 1932940
+	720  -  MemoryUsage of job (MB)
+	736888  -  ResidentSetSize of job (KB)
+...
+005 (268421.000.000) 2025-01-21 21:47:38 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:23, Sys 0 00:00:02  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:23, Sys 0 00:00:02  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	0  -  Total Bytes Sent By Job
+	0  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    460637 
+	   Memory (MB)          :      720        1       128 
+
+	Job terminated of its own accord at 2025-01-21T21:47:38Z with exit-code 0.
+...
+000 (274989.000.000) 2025-01-24 01:33:08 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+001 (274989.000.000) 2025-01-24 01:33:09 Job executing on host: <192.168.0.122:9618?addrs=192.168.0.122-9618&alias=node122.di.rm1&noUDP&sock=startd_2134_5331>
+...
+006 (274989.000.000) 2025-01-24 01:33:18 Image size of job updated: 847912
+	825  -  MemoryUsage of job (MB)
+	844084  -  ResidentSetSize of job (KB)
+...
+006 (274989.000.000) 2025-01-24 01:33:34 Image size of job updated: 2130160
+	827  -  MemoryUsage of job (MB)
+	846460  -  ResidentSetSize of job (KB)
+...
+005 (274989.000.000) 2025-01-24 01:33:34 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:24, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:24, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	0  -  Total Bytes Sent By Job
+	0  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :       27       27    499915 
+	   Gpus (Average)       :                 0         0 
+	   Memory (MB)          :      827        1       128 
+
+	Job terminated of its own accord at 2025-01-24T01:33:34Z with exit-code 0.
+...
