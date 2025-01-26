@@ -52,6 +52,9 @@ align_mpi: align_mpi.c rng.c
 align_mpi_exp: align_mpi_exp.c rng.c
 	$(MPICC) $(FLAGS) $(DEBUG) $< $(LIBS) $(GPROF) -o $@
 
+align_mpi_bcast: align_mpi_bcast.c rng.c
+	$(MPICC) $(FLAGS) $(DEBUG) $< $(LIBS) $(GPROF) -o $@
+
 align_pthread: align_pthreads.c rng.c
 	$(CC) $(FLAGS) $(DEBUG) $(PFLAG) $< $(LIBS) $(GPROF) -o $@
 

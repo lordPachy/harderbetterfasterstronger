@@ -472,7 +472,7 @@ int main(int argc, char *argv[]) {
 	printf("-----------------\n");
 	printf("Matches:");
 	for( lind=0; lind<seq_length; lind++ ) 
-		printf( " %lu", seq_matches[lind] );
+		printf( " %d", seq_matches[lind] );
 	printf("\n");
 	printf("-----------------\n");
 #endif // DEBUG

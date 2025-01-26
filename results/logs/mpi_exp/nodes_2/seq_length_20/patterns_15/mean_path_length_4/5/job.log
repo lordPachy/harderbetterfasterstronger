@@ -1,28 +1,28 @@
-000 (280337.000.000) 2025-01-25 16:09:10 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (280735.000.000) 2025-01-25 17:30:30 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
 ...
-014 (280337.000.001) 2025-01-25 16:09:17 Node 1 executing on host: <192.168.0.115:9618?addrs=192.168.0.115-9618&alias=node115.di.rm1&noUDP&sock=startd_1101621_f4a0>
+014 (280735.000.000) 2025-01-25 17:30:33 Node 0 executing on host: <192.168.0.109:9618?addrs=192.168.0.109-9618&alias=node109.di.rm1&noUDP&sock=startd_1627_90ad>
 ...
-014 (280337.000.000) 2025-01-25 16:09:17 Node 0 executing on host: <192.168.0.149:9618?addrs=192.168.0.149-9618&alias=node149.di.rm1&noUDP&sock=startd_1551_6f7a>
+014 (280735.000.001) 2025-01-25 17:30:33 Node 1 executing on host: <192.168.0.109:9618?addrs=192.168.0.109-9618&alias=node109.di.rm1&noUDP&sock=startd_1627_90ad>
 ...
-001 (280337.000.000) 2025-01-25 16:09:17 Job executing on host: MPI_job
+001 (280735.000.000) 2025-01-25 17:30:33 Job executing on host: MPI_job
 ...
-008 (280337.000.000) 2025-01-25 16:09:19 Launching orted on Node 1 of 2
+008 (280735.000.000) 2025-01-25 17:30:36 Launching orted on Node 1 of 2
 ...
-008 (280337.000.000) 2025-01-25 16:09:19 Launching orted on Node 0 of 2
+008 (280735.000.000) 2025-01-25 17:30:36 Launching orted on Node 0 of 2
 ...
-008 (280337.000.000) 2025-01-25 16:09:50 Node 0 caught SIGTERM, cleaning up mpirun
+008 (280735.000.000) 2025-01-25 17:32:31 Node 0 caught SIGTERM, cleaning up mpirun
 ...
-004 (280337.000.000) 2025-01-25 16:09:50 Job was evicted.
+004 (280735.000.000) 2025-01-25 17:32:31 Job was evicted.
 	(0) CPU times
-		Usr 0 00:00:31, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:01:57, Sys 0 00:00:01  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
 	0  -  Run Bytes Sent By Job
 	67278  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
 	   Cpus                 :                 1         1 
-	   Disk (KB)            :     8520       35    471944 
-	   Memory (MB)          :      327      287     40960 
+	   Disk (KB)            :     8519       35    468160 
+	   Memory (MB)          :      230      323     40960 
 ...
-009 (280337.000.000) 2025-01-25 16:09:50 Job was aborted.
+009 (280735.000.000) 2025-01-25 17:32:31 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

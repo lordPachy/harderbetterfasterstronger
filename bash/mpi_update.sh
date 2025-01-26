@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd  logs/mpi_exp
+cd  logs/mpi_bcast
 bash logs.sh
 cd ../..
-cd  jobs/mpi_exp
+cd  jobs/mpi_bcast
 bash jobs.sh
 cd ../..
