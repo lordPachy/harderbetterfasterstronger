@@ -406,8 +406,18 @@ int main(int argc, char *argv[]) {
 	}
 
 
-	/* 6. Receiving partial information */
+	/* 6. Exchanging information */
+	/* 6.0. This will be needed later for exchanging seq_matches */
+	// Calculating the number of necessary MPI_Sends (with the assumptions seq_length is not
+	// bigger than INT_MAX^2)
+	int rounds = (seq_length + 1)/INT_MAX;
+	if ((seq_length + 1)/INT_MAX != 0){
+		rounds++;
+	}
+
 	if (rank == 0){
+		/* 6.1 Receiving partial information at rank 0 */
+		/* 6.1.1 Creating temporary buffers */
 		unsigned long **buf_pat_found = (unsigned long**) malloc (sizeof(unsigned long*) * (size - 1));
 		int **buf_seq_matches = (int**) malloc (sizeof(int*) * (size - 1));
 		for (int i = 0; i < size - 1; i++){
@@ -415,8 +425,10 @@ int main(int argc, char *argv[]) {
 			buf_seq_matches[i] = (int*) malloc (sizeof(int) * (seq_length + 1));
 		}
 
+		/* 6.1.2 MPI operations */
 		int start_idx, end_idx;
 		for (int i = 1; i < size; i++){
+			
 			MPI_Recv(buf_pat_found[i-1], pat_number, MPI_UNSIGNED_LONG, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			// Aggregating pat_found results
 			start_idx = (pat_number / size) * i;
@@ -429,18 +441,47 @@ int main(int argc, char *argv[]) {
 			}
 			
 			// Aggregating seq_matches results
-			MPI_Recv(buf_seq_matches[i-1], seq_length + 1, MPI_INT, i, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			unsigned long index;
+			int quantity;
+			for (int round = 0; round < rounds; round++){
+				index = round*((seq_length + 1)/INT_MAX);
+				if (round == rounds - 1){
+					quantity = seq_length + 1 - index;
+				} else {
+					quantity = INT_MAX;
+				}
+				MPI_Recv(&buf_seq_matches[i][index], quantity, MPI_INT, i, 1+round, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			}
+
 			for (int j = 0; j < seq_length; j++){
 				seq_matches[j] += buf_seq_matches[i-1][j];
 			}
+
 			// Aggregating pat_matches results
 			pat_matches += buf_seq_matches[i-1][seq_length];
-			fflush(stdout);
 		}
 	} else {
-		seq_matches[seq_length] = pat_matches;
+		/* 6.2. Sending partial information from other ranks */
+		/* 6.2.1. Sending pat_found */
 		MPI_Send(pat_found, pat_number, MPI_UNSIGNED_LONG, 0, 0, MPI_COMM_WORLD);
-		MPI_Send(seq_matches, seq_length + 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
+		
+		/* 6.2.2. Sending seq_matches and pat_matches */
+		// pat_matches gets transferred with seq_matches
+		seq_matches[seq_length] = pat_matches;
+
+		/* 6.2.3.  MPI_Send supports sending INT_MAX elements per call. Splitting up sends */
+		// MPI_Send calls
+		unsigned long index;
+		int quantity;
+		for (int round = 0; round < rounds; round++){
+			index = round*((seq_length + 1)/INT_MAX);
+			if (round == rounds - 1){
+				quantity = seq_length + 1 - index;
+			} else {
+				quantity = INT_MAX;
+			}
+			MPI_Send(&seq_matches[index], quantity, MPI_INT, 0, 1+round, MPI_COMM_WORLD);
+		}
 	}
 
 	/* 7. Check sums */
