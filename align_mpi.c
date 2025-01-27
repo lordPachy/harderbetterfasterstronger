@@ -358,7 +358,7 @@ int main(int argc, char *argv[]) {
 
 	/* 2.3.2. Other results related to the main sequence */
 	int *seq_matches;
-	seq_matches = (int *)malloc(sizeof(unsigned long) * (seq_length + 1));
+	seq_matches = (int *)malloc(sizeof(int) * (seq_length + 1));
 	if ( seq_matches == NULL ) {
 		fprintf(stderr,"\n-- Error allocating aux sequence structures for size: %lu\n", (seq_length + 1));
 		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
@@ -506,7 +506,7 @@ int main(int argc, char *argv[]) {
 	printf("-----------------\n");
 	printf("Matches:");
 	for( lind=0; lind<seq_length; lind++ ) 
-		printf( " %lu", seq_matches[lind] );
+		printf( " %d", seq_matches[lind] );
 	printf("\n");
 	printf("-----------------\n");
 #endif // DEBUG
