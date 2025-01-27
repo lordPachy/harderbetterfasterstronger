@@ -406,12 +406,24 @@ int main(int argc, char *argv[]) {
 	}
 	
 
-	/* 6. Receiving partial information */
-	/* 6.1. Creating requests */
-	MPI_Request* comm_req = (MPI_Request*) malloc(sizeof(MPI_Request) * 2);
+	/* 6. Exchanging information */
+	/* 6.0.1. This will be needed later for exchanging seq_matches: splitting the sequence in chunks of size INT_MAX */
+	unsigned long index;
+	int quantity;
+	// Calculating the number of necessary MPI_Sends (with the assumptions seq_length is not
+	// bigger than INT_MAX^2)
+	int rounds = (seq_length + 1)/INT_MAX;
+	if ((seq_length + 1)%INT_MAX != 0){
+		rounds++;
+	}
+	printf("Calculated rounds for rank %d are: %d\n", rank, rounds);
 	
+	/* 6.0.2. Creating requests: one for pat_found and one for each chunk of seq_matches */
+	MPI_Request comm_req;
+
 	if (rank == 0){
-		/* 6.3. Pattern position (pat_found)*/
+		/* 6.1 Receiving partial information at rank 0 */
+		/* 6.1.1 Pattern position receving (pat_found)*/
 		// Creating the information about each process:
 		// Elements per thread and displacement in the final array
 		int *recvcounts = (int*) malloc(sizeof(int) * size);
@@ -426,28 +438,54 @@ int main(int argc, char *argv[]) {
 			displs[i] = start_idx;
 		}
 
-		MPI_Igatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, recvcounts, displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req[0]);
+		MPI_Igatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, recvcounts, displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
 
-		/* 6.2. Matches in the sequence (seq_matches) */
+		/* 6.1.2. Matches in the sequence (seq_matches) and pat_matches */
 		seq_matches[seq_length] = pat_matches;
-		MPI_Ireduce(MPI_IN_PLACE, seq_matches, seq_length + 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD, &comm_req[1]);
+		for (int round = 0; round < rounds; round++){
+				index = round*INT_MAX;
+				if (round == rounds - 1){
+					quantity = seq_length + 1 - index;
+				} else {
+					quantity = INT_MAX;
+				}
+				printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);
+				MPI_Reduce(MPI_IN_PLACE, &seq_matches[index], quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+			
+			}
 
-		//Waiting for results
-		MPI_Waitall(2, comm_req, MPI_STATUSES_IGNORE);
-		// Reporting results on the original variables
+		/* 6.1.3. Waiting for results */
+		MPI_Wait(&comm_req, MPI_STATUS_IGNORE);
+
+		/* 6.1.4. Reporting pat_matches on the original variable */
 		pat_matches = seq_matches[seq_length];
 
-		/* 6.4. Freeing up temporary structures */
+		/* 6.1.5. Freeing up temporary structures */
 		free(recvcounts);
 		free(displs);
 	
 	} else {
-		/* 6.5. Sending data from non-master processes */
+		/* 6.2. Sending data from non-master processes */
+		/* 6.2.1. Gathering pat_found */
+		MPI_Igatherv(&pat_found[start_idx], end_idx-start_idx, MPI_UNSIGNED_LONG, NULL, NULL, NULL, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
+		
+		/* 6.2.2. Sending pat_matches through seq_matches */
 		seq_matches[seq_length] = pat_matches;
-		MPI_Igatherv(&pat_found[start_idx], end_idx-start_idx, MPI_UNSIGNED_LONG, NULL, NULL, NULL, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req[0]);
-		MPI_Ireduce(seq_matches, NULL, seq_length + 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD, &comm_req[1]);
-		// Waiting for results
-		MPI_Waitall(2, comm_req, MPI_STATUSES_IGNORE);
+		
+		/* 6.2.3.  MPI_Ireduce supports sending INT_MAX elements per call. Splitting up calls */
+		for (int round = 0; round < rounds; round++){
+			index = round*INT_MAX;
+			if (round == rounds - 1){
+				quantity = seq_length + 1 - index;
+			} else {
+				quantity = INT_MAX;
+			}
+			printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);		
+			MPI_Reduce(&seq_matches[index], NULL, quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+		/* 6.2.4. Waiting MPI calls */
+		MPI_Wait(&comm_req, MPI_STATUS_IGNORE);
+		}
 	}
 
 	/* 7. Check sums */
@@ -480,7 +518,6 @@ int main(int argc, char *argv[]) {
 	/* Free local resources */	
 	free( sequence );
 	free( seq_matches );
-	free(comm_req);
 /*
  *
  * STOP HERE: DO NOT CHANGE THE CODE BELOW THIS POINT
