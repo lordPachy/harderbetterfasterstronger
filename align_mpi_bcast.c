@@ -337,11 +337,10 @@ int main(int argc, char *argv[]) {
 	/* 2.2.0 Splitting the sequence in chunks of size INT_MAX */
 	// Calculating the number of necessary MPI_Sends (with the assumptions seq_length is not
 	// bigger than INT_MAX^2)
-	int rounds = (seq_length + 1)/INT_MAX;
-	if ((seq_length + 1)%INT_MAX != 0){
+	int rounds = seq_length/INT_MAX;
+	if (seq_length%INT_MAX != 0){
 		rounds++;
 	}
-	printf("Calculated rounds for rank %d are: %d\n", rank, rounds);
 
 	/* 2.2.1 Generating the sequence at rank 0 and broadcasting it to other nodes */
 	if (rank == 0){
@@ -350,15 +349,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	unsigned long index;
-	int quantity;
-	for (int round = 0; round < rounds; round++){
+	int quantity, round;
+	for (round = 0; round < rounds; round++){
 		index = round*INT_MAX;
 		if (round == rounds - 1){
-			quantity = seq_length + 1 - index;
+			quantity = seq_length - index;
 		} else {
 			quantity = INT_MAX;
 		}
-		printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);		
 		MPI_Bcast(&sequence[index], quantity, MPI_CHAR, 0, MPI_COMM_WORLD);
 	}
 
@@ -435,6 +433,11 @@ int main(int argc, char *argv[]) {
 	/* 6. Exchanging information */
 	/* 6.0. Creating requests: one for pat_found and one for each chunk of seq_matches */
 	MPI_Request comm_req;
+	/* 6.0.1. Recalculating rounds considering that I also need to cast pat_matches */
+	rounds = (seq_length + 1)/INT_MAX;
+	if ((seq_length + 1)%INT_MAX != 0){
+		rounds++;
+	}
 
 	if (rank == 0){
 		/* 6.1 Receiving partial information at rank 0 */
@@ -457,14 +460,13 @@ int main(int argc, char *argv[]) {
 
 		/* 6.1.2. Matches in the sequence (seq_matches) and pat_matches */
 		seq_matches[seq_length] = pat_matches;
-		for (int round = 0; round < rounds; round++){
+		for (round = 0; round < rounds; round++){
 				index = round*INT_MAX;
 				if (round == rounds - 1){
 					quantity = seq_length + 1 - index;
 				} else {
 					quantity = INT_MAX;
 				}
-				printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);
 				MPI_Reduce(MPI_IN_PLACE, &seq_matches[index], quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 			
 			}
@@ -488,14 +490,13 @@ int main(int argc, char *argv[]) {
 		seq_matches[seq_length] = pat_matches;
 		
 		/* 6.2.3.  MPI_Ireduce supports sending INT_MAX elements per call. Splitting up calls */
-		for (int round = 0; round < rounds; round++){
+		for (round = 0; round < rounds; round++){
 			index = round*INT_MAX;
 			if (round == rounds - 1){
 				quantity = seq_length + 1 - index;
 			} else {
 				quantity = INT_MAX;
 			}
-			printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);		
 			MPI_Reduce(&seq_matches[index], NULL, quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
 		/* 6.2.4. Waiting MPI calls */
