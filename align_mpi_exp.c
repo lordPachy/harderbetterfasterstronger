@@ -416,7 +416,6 @@ int main(int argc, char *argv[]) {
 	if ((seq_length + 1)%INT_MAX != 0){
 		rounds++;
 	}
-	printf("Calculated rounds for rank %d are: %d\n", rank, rounds);
 	
 	/* 6.0.2. Creating requests: one for pat_found and one for each chunk of seq_matches */
 	MPI_Request comm_req;
@@ -449,7 +448,6 @@ int main(int argc, char *argv[]) {
 				} else {
 					quantity = INT_MAX;
 				}
-				printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);
 				MPI_Reduce(MPI_IN_PLACE, &seq_matches[index], quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 			
 			}
@@ -480,7 +478,6 @@ int main(int argc, char *argv[]) {
 			} else {
 				quantity = INT_MAX;
 			}
-			printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);		
 			MPI_Reduce(&seq_matches[index], NULL, quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
 		/* 6.2.4. Waiting MPI calls */

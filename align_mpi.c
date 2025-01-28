@@ -416,7 +416,6 @@ int main(int argc, char *argv[]) {
 	if ((seq_length + 1)%INT_MAX != 0){
 		rounds++;
 	}
-	printf("Calculated rounds for rank %d are: %d\n", rank, rounds);
 
 	if (rank == 0){
 		/* 6.1 Receiving partial information at rank 0 */
@@ -451,7 +450,6 @@ int main(int argc, char *argv[]) {
 				} else {
 					quantity = INT_MAX;
 				}
-				printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);
 				MPI_Recv(&buf_seq_matches[i-1][index], quantity, MPI_INT, i, 1+round, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			}
 
@@ -479,7 +477,6 @@ int main(int argc, char *argv[]) {
 			} else {
 				quantity = INT_MAX;
 			}
-			printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);
 			MPI_Send(&seq_matches[index], quantity, MPI_INT, 0, 1+round, MPI_COMM_WORLD);
 		}
 	}
