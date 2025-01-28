@@ -1,0 +1,13 @@
+# started on Tue Jan 28 18:15:26 2025
+
+
+ Performance counter stats for '../align_seq 1000 0.35 0.2 0.25 0 0 0 20000 10 0 500 0 M 4353435':
+
+            81,583      cache-misses                                                          
+
+       0.022853101 seconds time elapsed
+
+       0.021916000 seconds user
+       0.000996000 seconds sys
+
+
