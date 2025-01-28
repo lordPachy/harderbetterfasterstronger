@@ -20,7 +20,6 @@
 
 /* Headers for the CUDA assignment versions */
 #include<cuda.h>
-
 /* Example of macros for error checking in CUDA */
 #define CUDA_CHECK_FUNCTION( call )	{ cudaError_t check = call; if ( check != cudaSuccess ) fprintf(stderr, "CUDA Error in line: %d, %s\n", __LINE__, cudaGetErrorString(check) ); }
 #define CUDA_CHECK_KERNEL( )	{ cudaError_t check = cudaGetLastError(); if ( check != cudaSuccess ) fprintf(stderr, "CUDA Kernel Error in line: %d, %s\n", __LINE__, cudaGetErrorString(check) ); }
@@ -61,7 +60,14 @@ cannot handle patterns bigger than max block size
 block: 1024, grid: pat_number
 */ 
 
-	__global__ void find_patterns_v1(unsigned long *seq_len, char *sequence, char **patterns, unsigned long *pattern_found, unsigned long *pat_length){
+	__global__ void find_patternsv1(
+		unsigned long *seq_len, 
+		char *sequence, 
+		char **patterns, 
+		unsigned long *pattern_found, 
+		unsigned long *pat_length, 
+		int *resp)
+		{
 		int pat = blockIdx.x;
 		unsigned long idx = (unsigned long)((*seq_len / blockDim.x) * threadIdx.x);
 		unsigned long i,j;
@@ -79,130 +85,159 @@ block: 1024, grid: pat_number
 		}
 	}
 /*
-grid = (pat_number, however many blocks I need for a pattern)
+grid = (pat_number)
 block = 1024
 */
+	__global__ void find_patternsv2(
+		unsigned long *seq_len, 
+		char *sequence, 
+		char **patterns, 
+		unsigned long *pattern_found, 
+		unsigned long *pat_length, 
+		int *resp_thread)
+		{
+		int pat = blockIdx.x;
+		unsigned long idx = blockIdx.y*blockDim.x + threadIdx.x;
+
+		unsigned long i;
+		extern __shared__ bool s[];
+		bool *isTheSame = s;
+
+		// init isTheSame
+		isTheSame[0] = true;
+
+		for(i = 0; i < *seq_len - pat_length[pat]+1; i++){
+			if(idx < pat_length[pat]){
+				for(int j = 0; j < *resp_thread; j++){
+					if (idx+j < pat_length[pat]){
+						if(patterns[pat][idx+j] != sequence[idx+i+j]){
+							isTheSame[0] = false;
+						}
+					}
+				}
+			}
+			__syncthreads();
+
+			// result
+			if(threadIdx.x == 0 && isTheSame[0]==1){
+				pattern_found[pat] = i;
+				return;
+			}
+			if(threadIdx.x == 0) isTheSame[0] = true;
+		}
+	}
+/*
+grid = (pat_number)
+block = 1024
+REMEMEBR THE EXTRA BIT OF SHARED MEM
+ALSO KERNEL IS BROKEN AND NEEDS DEBUGGING
+*/
+	__global__ void find_patternsv3(
+		unsigned long *seq_len, 
+		char *sequence, 
+		char **patterns, 
+		unsigned long *pattern_found, 
+		unsigned long *pat_length, 
+		int *resp_thread)
+		{
+		int th_radius = *resp_thread;
+		int pat = blockIdx.x;
+		unsigned long idx = 2*th_radius*(threadIdx.x+1);
+		unsigned long i;
+		unsigned long th_seq_len = *seq_len;
+		unsigned long th_pat_len = pat_length[pat];
+
+		//shared memory for sequence and one pattern
+		extern __device__ __shared__ char sh[];
+		char *sh_seq = sh;
+		char *sh_pat = (char*)&sh_seq[th_seq_len];
+
+		__device__ __shared__ bool sh_correct;
+		sh_correct = true;
+
+		
+		// copy sequence from global into shared
+		for(i=0; i < th_seq_len; i+=blockDim.x){
+			if(threadIdx.x+i < th_seq_len) sh_seq[threadIdx.x+i] = sequence[threadIdx.x+i];
+		} 
+		// copy pattern to shared
+		for(i=0; i < th_pat_len; i+=blockDim.x){
+			if(threadIdx.x+i < th_pat_len) sh_pat[threadIdx.x+i] = patterns[pat][threadIdx.x+i];
+		} 
+
+		__syncthreads();
+
+		for(i = 0; i < th_seq_len - th_pat_len+1; i++){
+			if(idx < th_pat_len){
+				for(int j = 0; j < 2*th_radius + 1; j++){
+					if (idx+j < th_pat_len){
+						if(sh_pat[idx+j] != sh_seq[i+idx+j]){
+							sh_correct = false;
+						}
+					}
+				}
+			}
+			__syncthreads();
+
+			// result
+			if(threadIdx.x == 0 && sh_correct==true){
+				pattern_found[pat] = i;
+				return;
+			}
+			if(threadIdx.x == 0) sh_correct = true;
+		}
+	}
+
+// parallelization on sequence with shared memory
 	__global__ void find_patterns(
 		unsigned long *seq_len, 
 		char *sequence, 
 		char **patterns, 
 		unsigned long *pattern_found, 
 		unsigned long *pat_length, 
-		bool **g_isTheSame)
+		int *resp_thread)
 		{
-		unsigned long pat = blockIdx.x;
-		unsigned long idx = blockIdx.y*blockDim.x + threadIdx.x;
-		unsigned long i;
-		// array for reduction
-		//TODO assign less memory to last block
-		//unsigned long portionedShared = blockDim.x;//(pat_length[pat] - gridDim.y*blockDim.x);
-		extern __shared__ bool s[];
-		bool *isTheSame = s;
-		bool *aggregateIsTheSame = (bool *)&isTheSame[1024];
+		int pat = blockIdx.x;
+		// init in shared memory and registers
+		unsigned long th_seq_len = *seq_len;
+		unsigned long th_pat_len = pat_length[pat];
 
-		for(i = 0; i < *seq_len - pat_length[pat] + 1; i++){
-			isTheSame[idx] = ((patterns[pat][idx] == sequence[idx+i]) && idx<pat_length[pat]);
-			__syncthreads();
-			
+		unsigned long idx = (th_seq_len / blockDim.x) * threadIdx.x;
+		unsigned long i,j;
 
-			//aggregate infrablock
-			for(int r=pat_length[pat]/2; r>0; r /= 2){
-				if(idx<pat_length[pat]){
-					isTheSame[threadIdx.x] *=  isTheSame[threadIdx.x + r];
-				}
-				__syncthreads();
-			} 
-			
-			//aggregate interblock
-			if(threadIdx.x == 0) g_isTheSame[pat][blockIdx.y] = isTheSame[threadIdx.x];
-			if(blockIdx.y == 0){
-				if(threadIdx.x < gridDim.y){
-					aggregateIsTheSame[threadIdx.x] =  g_isTheSame[pat][threadIdx.x];
-				}
-				__syncthreads();
-					
-				for(int r=gridDim.y/2; r>0; r /= 2){
-					if(threadIdx.x < gridDim.y){
-						aggregateIsTheSame[threadIdx.x] *= aggregateIsTheSame[threadIdx.x + r];
-					}
-					__syncthreads();
-				}
-				if(threadIdx.x == 0 && aggregateIsTheSame[0]==1){
-					pattern_found[pat] = i;
-					return;
-				}
-				// if another block has already found pattern shut down all blocks
-				// looking for the same pattern
-				//if(pattern_found[pat] != NOT_FOUND){
-				//	return;
-				//}
-			}
-		}
-	}
-
-/*
-grid = (pat_number, however many blocks I need for a pattern, how many fractions of the input to process at the same time)
-block = 1024
-*/
-	__global__ void find_patterns_v2_5(
-		unsigned long *seq_len, 
-		char *sequence, 
-		char **patterns, 
-		unsigned long *pattern_found, 
-		unsigned long *pat_length, 
-		bool **g_isTheSame)
-		{
-		unsigned long pat = blockIdx.x;
-		unsigned long idx = blockIdx.y*blockDim.x + threadIdx.x;
-		unsigned long sect = (unsigned long)((double)*pat_length/gridDim.z);
-		unsigned long i;
-		// array for reduction
-		//TODO assign less memory to last block
-		//unsigned long portionedShared = blockDim.x;//(pat_length[pat] - gridDim.y*blockDim.x);
-		extern __shared__ bool s[];
-		bool *isTheSame = s;
-		bool *aggregateIsTheSame = (bool *)&isTheSame[1024];
 		
-		for(i = sect*blockIdx.z; i < (sect*(blockIdx.z+1)) && i < *seq_len - pat_length[pat] + 1; i++){
-			isTheSame[idx] = ((patterns[pat][idx] == sequence[idx+i]) && idx<pat_length[pat]);
-			__syncthreads();
-			
 
-			//aggregate infrablock
-			for(int r=pat_length[pat]/2; r>0; r /= 2){
-				if(idx<pat_length[pat]){
-					isTheSame[threadIdx.x] *=  isTheSame[threadIdx.x + r];
-				}
-				__syncthreads();
-			} 
-			
-			//aggregate interblock
-			if(threadIdx.x == 0) g_isTheSame[pat][blockIdx.y] = isTheSame[threadIdx.x];
-			if(blockIdx.y == 0){
-				if(threadIdx.x < gridDim.y){
-					aggregateIsTheSame[threadIdx.x] =  g_isTheSame[pat][threadIdx.x];
-				}
-				__syncthreads();
-					
-				for(int r=gridDim.y/2; r>0; r /= 2){
-					if(threadIdx.x < gridDim.y){
-						aggregateIsTheSame[threadIdx.x] *= aggregateIsTheSame[threadIdx.x + r];
-					}
-					__syncthreads();
-				}
-				if(threadIdx.x == 0 && aggregateIsTheSame[0]==1){
-					pattern_found[pat] = i;
-					return;
-				}
-				// if another block has already found pattern shut down all blocks
-				// looking for the same pattern
-				//if(pattern_found[pat] != NOT_FOUND){
-				//	return;
-				//}
+		extern __shared__ char sh[];
+		char *sh_seq = sh;
+		char *sh_pat = &sh_seq[th_seq_len];
+
+		
+		// copy sequence from global into shared
+		for(i=0; i < th_seq_len; i+=blockDim.x){
+			if(threadIdx.x+i < th_seq_len) sh_seq[threadIdx.x+i] = sequence[threadIdx.x+i];
+		} 
+		//if (threadIdx.x==0)printf("this is the sequence: %s\n", sh_seq);
+		// copy pattern to shared
+		for(i=0; i < th_pat_len; i+=blockDim.x){
+			if(threadIdx.x+i < th_pat_len) sh_pat[threadIdx.x+i] = patterns[pat][threadIdx.x+i];
+		} 
+		//if (threadIdx.x == 0) printf("this is the pattern: %s\n", sh_pat);
+
+		__syncthreads();
+
+		//loop for paralellizing seq
+		for(i = idx; i<idx+blockDim.x && i+th_pat_len <= th_seq_len; i++){
+			//check the pattern
+			for(j = 0; j<th_pat_len; j++){
+				if(sh_seq[i+j] != sh_pat[j]) break;
+			}
+			// check if last loop ended in match
+			if(j==th_pat_len){
+				pattern_found[pat] = i;
+				return;
 			}
 		}
 	}
-
 /*
  * Function: Increment the number of pattern matches on the sequence positions
  * 	This function can be changed and/or optimized by the students
@@ -210,10 +245,7 @@ block = 1024
 void increment_matches( int pat, unsigned long *pat_found, unsigned long *pat_length, int *seq_matches ) {
 	unsigned long ind;	
 	for( ind=0; ind<pat_length[pat]; ind++) {
-		if ( seq_matches[ pat_found[pat] + ind ] == NOT_FOUND )
-			seq_matches[ pat_found[pat] + ind ] = 0;
-		else
-			seq_matches[ pat_found[pat] + ind ] ++;
+		seq_matches[ pat_found[pat] + ind ] ++;
 	}
 }
 /*
@@ -495,6 +527,7 @@ int main(int argc, char *argv[]) {
  * DO NOT USE OpenMP IN YOUR CODE
  *
  */
+	setbuf(stdout, NULL);
 	/* 2.1. Allocate and fill sequence */
 	char *sequence = (char *)malloc( sizeof(char) * seq_length );
 	if ( sequence == NULL ) {
@@ -537,7 +570,7 @@ int main(int argc, char *argv[]) {
 		pat_found[ind] = (unsigned long)NOT_FOUND;
 	}
 	for( lind=0; lind<seq_length; lind++) {
-		seq_matches[lind] = NOT_FOUND;
+		seq_matches[lind] = 0;
 	}
 
 	/* 5. Search for each pattern */
@@ -551,18 +584,22 @@ int main(int argc, char *argv[]) {
 	}
 	// 1024 is max threads per block on cluster
 	int block = 1024;
-	int sects = 2;
-	dim3 grid(pat_number,(int)ceil((double)longest/block),sects);
+	int sects = 1;
+	int resp_thread = (int)ceil((double)(longest - block)/(2*block));
+	dim3 grid(pat_number,sects);
 
-    char* d_sequence; 
+    char *d_sequence;
 	unsigned long *d_pat_found_cuda;
 	unsigned long *d_seq_length;
+	int *d_resp_thread;
 	bool **d_isTheSame;
 
 	CUDA_CHECK_FUNCTION(cudaMalloc(&d_sequence, sizeof(char) * seq_length));
 	CUDA_CHECK_FUNCTION(cudaMalloc(&d_pat_found_cuda, sizeof(unsigned long) * pat_number));
 	CUDA_CHECK_FUNCTION(cudaMalloc(&d_seq_length, sizeof(unsigned long)));
+	CUDA_CHECK_FUNCTION(cudaMalloc(&d_resp_thread, sizeof(int)));
 	CUDA_CHECK_FUNCTION(cudaMalloc(&d_isTheSame, sizeof(bool*) * pat_number));
+
 
 	// manually copying nested list
 	bool **host_isTheSame = (bool**)malloc(sizeof(bool*) * pat_number);
@@ -575,17 +612,19 @@ int main(int argc, char *argv[]) {
 	CUDA_CHECK_FUNCTION(cudaMemcpy( d_sequence, sequence, sizeof(char) * seq_length, cudaMemcpyHostToDevice));
     CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_found_cuda,  pat_found, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
 	CUDA_CHECK_FUNCTION(cudaMemcpy( d_seq_length, &seq_length, sizeof(unsigned long), cudaMemcpyHostToDevice));
+	CUDA_CHECK_FUNCTION(cudaMemcpy( d_resp_thread, &resp_thread, sizeof(int), cudaMemcpyHostToDevice));
 
-	find_patterns<<<grid, block, 1024*sizeof(bool)+grid.y*sizeof(bool)>>>
-	(d_seq_length, d_sequence, d_pattern, d_pat_found_cuda, d_pat_length, d_isTheSame);
+	find_patterns<<<grid, block, sizeof(char)*seq_length + sizeof(char)*longest + sizeof(bool)>>>
+	(d_seq_length, d_sequence, d_pattern, d_pat_found_cuda, d_pat_length, d_resp_thread);
+	cudaDeviceSynchronize();
 	CUDA_CHECK_KERNEL();
 
-	//update the result vector
 	CUDA_CHECK_FUNCTION(cudaMemcpy( pat_found, d_pat_found_cuda, sizeof(unsigned long) * pat_number, cudaMemcpyDeviceToHost));
 	for(int pat = 0; pat < pat_number; pat++){
 		if ( pat_found[pat] != (unsigned long)NOT_FOUND ) {
 			/* 4.2.1. Increment the number of pattern matches on the sequence positions */
 			increment_matches( pat, pat_found, pat_length, seq_matches );
+			pat_matches++;
 		}
 	}
 
@@ -598,8 +637,7 @@ int main(int argc, char *argv[]) {
 			checksum_found = ( checksum_found + pat_found[ind] ) % CHECKSUM_MAX;
 	}
 	for( lind=0; lind < seq_length; lind++) {
-		if ( seq_matches[lind] != NOT_FOUND )
-			pat_matches ++;
+		if ( seq_matches[lind] != 0 )
 			checksum_matches = ( checksum_matches + seq_matches[lind] ) % CHECKSUM_MAX;
 	}
 
@@ -643,6 +681,7 @@ int main(int argc, char *argv[]) {
 			pat_matches,
 			checksum_found,
 			checksum_matches );
+
 		
 	/* 10. Free resources */	
 	int i;
