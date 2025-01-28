@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -r runs_mpi*
+rm -r runs_mpi_bcast*
 
-rm -r logs/mpi/*
-rm -r jobs/mpi/*
+rm -r logs/mpi_bcast/*
+rm -r jobs/mpi_bcast/*

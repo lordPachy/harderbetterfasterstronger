@@ -133,7 +133,7 @@ void generate_sample_sequence( rng_t *random, rng_t random_seq, float prob_G, fl
 
 
 /*
- * Function: Print usage line in stderr
+ * Function: printf usage line in stderr
  */
 void show_usage( char *program_name ) {
 	fprintf(stderr,"Usage: %s ", program_name );
@@ -197,7 +197,7 @@ int main(int argc, char *argv[]) {
 	unsigned long seed = atol( argv[14] );
 
 #ifdef DEBUG
-	/* DEBUG: Print arguments */
+	/* DEBUG: printf arguments */
 	if ( rank == 0 ) {
 		printf("\nArguments: seq_length=%lu\n", seq_length );
 		printf("Arguments: Accumulated probabilitiy G=%f, C=%f, A=%f, T=1\n", prob_G, prob_C, prob_A );
@@ -338,7 +338,7 @@ int main(int argc, char *argv[]) {
 
 	if (rank == 0){
 #ifdef DEBUG
-	/* DEBUG: Print sequence and patterns */
+	/* DEBUG: printf sequence and patterns */
 	printf("-----------------\n");
 	printf("Sequence: ");
 	for( lind=0; lind<seq_length; lind++ ) 
@@ -358,7 +358,7 @@ int main(int argc, char *argv[]) {
 
 	/* 2.3.2. Other results related to the main sequence */
 	int *seq_matches;
-	seq_matches = (int *)malloc(sizeof(unsigned long) * (seq_length + 1));
+	seq_matches = (int *)malloc(sizeof(int) * (seq_length + 1));
 	if ( seq_matches == NULL ) {
 		fprintf(stderr,"\n-- Error allocating aux sequence structures for size: %lu\n", (seq_length + 1));
 		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
@@ -382,7 +382,7 @@ int main(int argc, char *argv[]) {
 	}
 	for( pat=start_idx; pat < end_idx; pat++ ) {
 
-		/* 5.1. For each posible starting position */
+		/* 5.1. For each possible starting position */
 		for( start=0; start <= seq_length - pat_length[pat]; start++) {
 
 			/* 5.1.1. For each pattern element */
@@ -406,8 +406,21 @@ int main(int argc, char *argv[]) {
 	}
 
 
-	/* 6. Receiving partial information */
+	/* 6. Exchanging information */
+	/* 6.0. This will be needed later for exchanging seq_matches */
+	unsigned long index;
+	int quantity;
+	// Calculating the number of necessary MPI_Sends (with the assumptions seq_length is not
+	// bigger than INT_MAX^2)
+	int rounds = (seq_length + 1)/INT_MAX;
+	if ((seq_length + 1)%INT_MAX != 0){
+		rounds++;
+	}
+	printf("Calculated rounds for rank %d are: %d\n", rank, rounds);
+
 	if (rank == 0){
+		/* 6.1 Receiving partial information at rank 0 */
+		/* 6.1.1 Creating temporary buffers */
 		unsigned long **buf_pat_found = (unsigned long**) malloc (sizeof(unsigned long*) * (size - 1));
 		int **buf_seq_matches = (int**) malloc (sizeof(int*) * (size - 1));
 		for (int i = 0; i < size - 1; i++){
@@ -415,8 +428,10 @@ int main(int argc, char *argv[]) {
 			buf_seq_matches[i] = (int*) malloc (sizeof(int) * (seq_length + 1));
 		}
 
+		/* 6.1.2 MPI operations */
 		int start_idx, end_idx;
 		for (int i = 1; i < size; i++){
+			
 			MPI_Recv(buf_pat_found[i-1], pat_number, MPI_UNSIGNED_LONG, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			// Aggregating pat_found results
 			start_idx = (pat_number / size) * i;
@@ -429,18 +444,44 @@ int main(int argc, char *argv[]) {
 			}
 			
 			// Aggregating seq_matches results
-			MPI_Recv(buf_seq_matches[i-1], seq_length + 1, MPI_INT, i, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			for (int round = 0; round < rounds; round++){
+				index = round*INT_MAX;
+				if (round == rounds - 1){
+					quantity = seq_length + 1 - index;
+				} else {
+					quantity = INT_MAX;
+				}
+				printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);
+				MPI_Recv(&buf_seq_matches[i-1][index], quantity, MPI_INT, i, 1+round, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			}
+
 			for (int j = 0; j < seq_length; j++){
 				seq_matches[j] += buf_seq_matches[i-1][j];
 			}
+
 			// Aggregating pat_matches results
 			pat_matches += buf_seq_matches[i-1][seq_length];
-			fflush(stdout);
 		}
 	} else {
-		seq_matches[seq_length] = pat_matches;
+		/* 6.2. Sending partial information from other ranks */
+		/* 6.2.1. Sending pat_found */
 		MPI_Send(pat_found, pat_number, MPI_UNSIGNED_LONG, 0, 0, MPI_COMM_WORLD);
-		MPI_Send(seq_matches, seq_length + 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
+		
+		/* 6.2.2. Sending seq_matches and pat_matches */
+		// pat_matches gets transferred with seq_matches
+		seq_matches[seq_length] = pat_matches;
+
+		/* 6.2.3.  MPI_Send supports sending INT_MAX elements per call. Splitting up sends */
+		for (int round = 0; round < rounds; round++){
+			index = round*INT_MAX;
+			if (round == rounds - 1){
+				quantity = seq_length + 1 - index;
+			} else {
+				quantity = INT_MAX;
+			}
+			printf("For rank %d:\nIndex at round %d is: %lu\nQuantity is: %d\n", rank, round, index, quantity);
+			MPI_Send(&seq_matches[index], quantity, MPI_INT, 0, 1+round, MPI_COMM_WORLD);
+		}
 	}
 
 	/* 7. Check sums */
@@ -465,7 +506,7 @@ int main(int argc, char *argv[]) {
 	printf("-----------------\n");
 	printf("Matches:");
 	for( lind=0; lind<seq_length; lind++ ) 
-		printf( " %lu", seq_matches[lind] );
+		printf( " %d", seq_matches[lind] );
 	printf("\n");
 	printf("-----------------\n");
 #endif // DEBUG
