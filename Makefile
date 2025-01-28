@@ -61,8 +61,8 @@ align_pthread: align_pthreads.c rng.c
 align_omp: align_omp.c rng.c
 	$(CC) $(FLAGS) $(DEBUG) $(OMPFLAG) $< $(LIBS) $(GPROF) -o $@
 
-align_mpiomp: align_mpiomp.c rng.c
-	$(MPICC) $(FLAGS) $(DEBUG) $(OMPFLAG) $< $(LIBS) $(GPROF) -o $@
+align_mpipthread: align_mpipthreads.c rng.c
+	$(MPICC) $(FLAGS) $(DEBUG) $(PFLAG) $< $(LIBS) $(GPROF) -o $@
 
 align_cuda: align_cuda.cu rng.c
 	$(CUDACC) $(CUDAFLAGS) $(DEBUG) $< $(LIBS) $(GPROF) -o $@

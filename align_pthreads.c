@@ -97,7 +97,7 @@ void copy_sample_sequence( rng_t *random, char *sequence, unsigned long seq_leng
 typedef struct pattern_recognition_args{
 	int pat_n_start;				// IN: thread - specific
 	int pat_n_end;					// IN: thread - specific
-	int seq_length;					// IN: global
+	unsigned long seq_length;		// IN: global
 	unsigned long *pat_length;		// IN: global
 	char *sequence;					// IN: global
 	char **pattern;					// IN: global
@@ -112,7 +112,7 @@ void *pattern_recognition(void *args){
 	pattern_recognition_args *params = (pattern_recognition_args*) args;
 	int pat_n_start = params->pat_n_start;
 	int pat_n_end = params->pat_n_end;
-	int seq_length = params->seq_length;
+	unsigned long seq_length = params->seq_length;
 	unsigned long *pat_length = params->pat_length;
 	char *sequence = params->sequence;
 	int *pat_matches = params->pat_matches;
@@ -427,25 +427,26 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* 5. Search for each pattern */
-
-	// Variable initialization: thread management
+	/* 5.1. Variable initialization */
+	/* 5.1.1. Thread management */
 	int num_threads = NUM_THREADS;
 	pthread_t** thread_handles = malloc(sizeof(pthread_t*) * num_threads);
 	pattern_recognition_args* args = malloc(sizeof(pattern_recognition_args) * num_threads);
 
-	// Variable initialization: input parameters
+	/* 5.1.2. Input parameters */
 	int *pat_n_start = (int*) malloc(sizeof(int) * num_threads);
 	int *pat_n_end = (int*) malloc(sizeof(int) * num_threads);
 
-	// Variable initialization: return parameters
+	/* 5.1.3. Return parameters */
 	int *thread_pat_matches = (int*) calloc(sizeof(int), num_threads);
 	int **thread_seq_matches = (int**) malloc(sizeof(int*) * num_threads);
 
+	/* 5.2. Spawning threads */
 	for (int i = 0; i < num_threads; i++){
-		// Initializing the thread handle
+		/* 5.2.1 Initializing thread handles */
 		thread_handles[i] = malloc(sizeof(pthread_t));
 
-		// Initializing the parameters for the function
+		/* 5.2.2 Initializing function parameters */
 		pat_n_start[i] = pat_number/num_threads * i;
 		if (i == num_threads - 1){
 			pat_n_end[i] = pat_number;
@@ -467,21 +468,20 @@ int main(int argc, char *argv[]) {
 			thread_seq_matches[i]
 			};
 
-		// Creating the thread
+		/* 5.2.3 Creating threads */
 		pthread_create(thread_handles[i], NULL, pattern_recognition, (void*) &args[i]);
 	}
 
 
-	// Joining threads
+	/* 5.3. Joining threads */
 	for (int i = 0; i < num_threads; i++){
-		// We need to wait for the thread to finish
 		pthread_join(*thread_handles[i], NULL);
 
-		// Gathering the results
-		// Pat_matches
+		/* 6. Gathering partial results and assemblating them */
+		/* 6.1. Pattern matches */
 		pat_matches += thread_pat_matches[i];
 
-		// Seq_matches 
+		/* 6.2. Sequence matches */ 
 		for (unsigned long j = 0; j < seq_length; j++){
 			seq_matches[j] += thread_seq_matches[i][j];
 		}
