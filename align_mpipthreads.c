@@ -98,9 +98,7 @@ void copy_sample_sequence( rng_t *random, char *sequence, unsigned long seq_leng
 typedef struct pattern_recognition_args{
 	unsigned long seq_start;		// IN: thread - specific
 	unsigned long seq_chunk_size;	// IN: thread - specific
-	int pat_th_start;				// IN: thread - specific
-	int id;							// IN: thread - specific, debug
-	int rank; 						// IN: global, debug		
+	int pat_th_start;				// IN: thread - specific		
 	int *pat_lock;					// IN: global
 	int pat_n_start;				// IN: global
 	int pat_n_end;					// IN: global
@@ -109,7 +107,6 @@ typedef struct pattern_recognition_args{
 	char *sequence;					// IN: global
 	char **pattern;					// IN: global
 	unsigned long *pat_found; 		// OUT: thread - specific
-	//int *seq_matches;				// OUT: thread - specific
 	
 }pattern_recognition_args;
 
@@ -126,16 +123,12 @@ void *pattern_recognition(void *args){
 	char *sequence = params->sequence;
 	char **pattern = params->pattern;
 	unsigned long *pat_found = params->pat_found;
-	int rank = params->rank;
-	int id = params->id;
 	int *pat_lock = params->pat_lock;
-	//int *seq_matches = params->seq_matches;
-
-	// Debug
 
 	unsigned long lind;
 	int pat;
-
+	printf("Everything well\n");
+	fflush(stdout);
 	for(int idx=0; idx < pat_n_end - pat_n_start; idx++) {
 		// Each thread starts by looking up a different thread,
 		// so they don't interleave in looking for the same pattern all together
@@ -148,14 +141,6 @@ void *pattern_recognition(void *args){
 			continue;
 		}
 
-		// Debug
-		//printf("Thread %d at rank %d is analyzing pattern %d\n", id, rank, pat);
-		//fflush(stdout);
-
-		// Debug
-		if (idx == 0){
-			//printf("Test is passed for pat=%d\n", pat);
-		}
 		// For each posible starting position
 		for(unsigned long start=seq_start; start <= seq_start + seq_chunk_size; start++) {
 			// Ensuring that the search can actually be brought out inside the sequence
@@ -170,23 +155,16 @@ void *pattern_recognition(void *args){
 			}
 			// Check if the loop ended with a match
 			if (lind == pat_length[pat]) {
+				if (pat >= pat_n_end){
+					printf("WTF\n");
+				}
 				pat_lock[pat]++;
+				fflush(stdout);
 				pat_found[pat] = start;
-				// Debug
-				//printf("Thread %d at rank %d has found pattern %d\n", id, rank, pat);
-				//fflush(stdout);
 				break;
 			}
 		}
-
-		// Pattern found
-		//if ( pat_found[pat] != (unsigned long)NOT_FOUND ) {
-		//	/* 4.2.1. Increment the number of pattern matches on the sequence positions */
-		//	for(unsigned long ind=0; ind<pat_length[pat]; ind++) {
-		//		seq_matches[ pat_found[pat] + ind ] ++;
-		//	}
-		//}
-		}
+	}
 	
 	return NULL;
 }
@@ -440,7 +418,7 @@ int main(int argc, char *argv[]) {
 	random = rng_new( seed );
 	generate_rng_sequence( &random, prob_G, prob_C, prob_A, sequence, seq_length);
 
-	/* 2.3.2. Other results related to the main sequence */
+	/* 3. Other results related to the main sequence */
 	int *seq_matches;
 	seq_matches = (int *)malloc(sizeof(int) * (seq_length + 1));
 	if ( seq_matches == NULL ) {
@@ -501,26 +479,31 @@ int main(int argc, char *argv[]) {
 	unsigned long* seq_start = (unsigned long*) malloc(sizeof(unsigned long) * num_threads);
 	unsigned long* seq_chunk_size = (unsigned long*) malloc(sizeof(unsigned long) * num_threads);
 	int* pat_th_start = (int*) malloc(sizeof(int) * num_threads);
-	int* id = (int*) malloc(sizeof(int)*num_threads);
 
-	/* 5.1.4. Allocating pattern "locks" */
-	// Each pattern has an associated counter that is augmented when
-	// the pattern has been found.
-	// This will be used to restrain threads from seeking patterns
-	// already found.
-
-	int *pat_lock = (int*) calloc(sizeof(int), pat_number);
-
-	/* 5.1.3. Return parameters */
+	/* 5.1.4. Control constructs */
+	// pat_lock[i] gets incremented when a thread discovers pattern i.
+	// Whenever a thread is beginning to check for a thread, it checks that it has not
+	// already been found through this list.
+	// Note that this list does not guarantee through sync constructs that no two threads
+	// will look for the same pattern, but it does not matter as long as the pattern is found.
+	// This is more time-efficient than using synchronization constructs, since they are not 
+	// stricly necessary.
+	printf("Rank %d check 0\n", rank);
+	fflush(stdout);
+	int *pat_lock = (int*) malloc(sizeof(int) * pat_number);
+	printf("Rank %d check 1\n", rank);
+	fflush(stdout);
+	/* 5.1.5. Return parameters */
 	unsigned long **thread_pat_found = (unsigned long**) malloc(sizeof(unsigned long*)*num_threads);
+	printf("Rank %d check 2\n", rank);
+	fflush(stdout);
 	/* 5.2. Spawning threads */
 	for (int i = 0; i < num_threads; i++){
 		/* 5.2.1 Initializing thread handles */
 		thread_handles[i] = malloc(sizeof(pthread_t));
 
 		/* 5.2.2 Initializing function parameters */
-		id[i] = i;
-		seq_start[i] = i * seq_length/num_threads;
+		seq_start[i] = ((unsigned long)i) * seq_length/((unsigned long)num_threads);
 		//printf("%d.%d will start looking at sequence from %lu\n", rank, id[i], seq_start[i]);
 		pat_th_start[i] = i * (end_idx - start_idx)/num_threads;
 		//printf("%d.%d will start looking at patterns from %d\n", rank, id[i], pat_th_start[i] + start_idx);
@@ -531,6 +514,8 @@ int main(int argc, char *argv[]) {
 		}
 
 		thread_pat_found[i] = (unsigned long*) malloc(sizeof(unsigned long)*pat_number);
+		printf("Rank %d, thread %d check 3\n", rank, i);
+		fflush(stdout);
 		for(ind = 0; ind < pat_number; ind++) {
 			thread_pat_found[i][ind] = (unsigned long)NOT_FOUND;
 		}
@@ -539,8 +524,6 @@ int main(int argc, char *argv[]) {
 			seq_start[i],
 			seq_chunk_size[i],
 			pat_th_start[i],
-			id[i],
-			rank,
 			pat_lock,
 			start_idx,
 			end_idx,
@@ -553,6 +536,8 @@ int main(int argc, char *argv[]) {
 
 		/* 5.2.3 Creating threads */
 		pthread_create(thread_handles[i], NULL, pattern_recognition, (void*) &args[i]);
+		printf("Rank %d thread %d check 4\n", rank, i);
+		fflush(stdout);
 	}
 
 	//printf("Check 1 for rank %d\n", rank);
@@ -575,6 +560,10 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
+
+
+	printf("Everything well from rank %d\n", rank);
+	fflush(stdout);
 	//printf("Check 3 for rank %d\n", rank);
 	/* 6. Exchanging information */
 	/* 6.0. This will be needed later for exchanging seq_matches */
@@ -596,6 +585,8 @@ int main(int argc, char *argv[]) {
 			buf_pat_found[i] = (unsigned long*) malloc(sizeof(unsigned long) * (pat_number));
 			buf_seq_matches[i] = (int*) malloc (sizeof(int) * (seq_length + 1));
 		}
+
+		printf("Rank %d check 5\n", rank);
 
 		/* 6.1.2 MPI operations */
 		int start_idx, end_idx;
