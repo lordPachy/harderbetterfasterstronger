@@ -39,3 +39,59 @@
 009 (280988.000.000) 2025-01-25 18:29:13 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...
+000 (288197.000.000) 2025-01-28 18:52:22 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+...
+014 (288197.000.002) 2025-01-28 18:52:30 Node 2 executing on host: <192.168.0.120:9618?addrs=192.168.0.120-9618&alias=node120.di.rm1&noUDP&sock=startd_2096_4298>
+...
+014 (288197.000.003) 2025-01-28 18:52:30 Node 3 executing on host: <192.168.0.135:9618?addrs=192.168.0.135-9618&alias=node135.di.rm1&noUDP&sock=startd_2000_6980>
+...
+014 (288197.000.000) 2025-01-28 18:52:30 Node 0 executing on host: <192.168.0.113:9618?addrs=192.168.0.113-9618&alias=node113.di.rm1&noUDP&sock=startd_3668932_c305>
+...
+014 (288197.000.001) 2025-01-28 18:52:30 Node 1 executing on host: <192.168.0.123:9618?addrs=192.168.0.123-9618&alias=node123.di.rm1&noUDP&sock=startd_2149_9d1d>
+...
+001 (288197.000.000) 2025-01-28 18:52:30 Job executing on host: MPI_job
+...
+008 (288197.000.000) 2025-01-28 18:52:32 Launching orted on Node 2 of 4
+...
+008 (288197.000.000) 2025-01-28 18:52:32 Launching orted on Node 3 of 4
+...
+008 (288197.000.000) 2025-01-28 18:52:32 Launching orted on Node 0 of 4
+...
+008 (288197.000.000) 2025-01-28 18:52:32 Launching orted on Node 1 of 4
+...
+008 (288197.000.000) 2025-01-28 18:54:24 orted exited on Node 3 of 4
+...
+008 (288197.000.000) 2025-01-28 18:54:24 orted exited on Node 2 of 4
+...
+008 (288197.000.000) 2025-01-28 18:54:24 orted exited on Node 1 of 4
+...
+008 (288197.000.000) 2025-01-28 18:54:24 orted exited on Node 0 of 4
+...
+015 (288197.000.002) 2025-01-28 18:54:24 Node 2 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:01:48, Sys 0 00:00:02  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:01:48, Sys 0 00:00:02  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2187  -  Run Bytes Sent By Node
+	33631  -  Run Bytes Received By Node
+	2187  -  Total Bytes Sent By Node
+	33631  -  Total Bytes Received By Node
+...
+004 (288197.000.000) 2025-01-28 18:54:24 Job was evicted.
+	(0) CPU times
+		Usr 0 00:05:24, Sys 0 00:00:07  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	2187  -  Run Bytes Sent By Job
+	134524  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :     8570       35    459754 
+	   GPUs                 :                           1 
+	   Memory (MB)          :      279      305      1024 
+...
+009 (288197.000.000) 2025-01-28 18:54:24 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+
+	Job terminated by itself at 2025-01-28T18:54:24Z (using method 0: OF_ITS_OWN_ACCORD).
+...

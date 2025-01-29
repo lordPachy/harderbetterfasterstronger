@@ -1,5 +1,3 @@
-No protocol specified
-No protocol specified
 --------------------------------------------------------------------------
 By default, for Open MPI 4.0 and later, infiniband ports on a device
 are not used by default.  The intent is to use UCX for these devices.
@@ -17,6 +15,6 @@ WARNING: There was an error initializing an OpenFabrics device.
   Local host:   node135
   Local device: ibp129s0
 --------------------------------------------------------------------------
-[node110:3722289] 3 more processes have sent help message help-mpi-btl-openib.txt / ib port not selected
-[node110:3722289] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
-[node110:3722289] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[node139:1004103] 3 more processes have sent help message help-mpi-btl-openib.txt / ib port not selected
+[node139:1004103] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[node139:1004103] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
