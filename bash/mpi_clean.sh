@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -r runs_mpi_bcast*
+rm -r runs_mpipthreads*
 
-rm -r logs/mpi_bcast/*
-rm -r jobs/mpi_bcast/*
+rm -r logs/mpipthreads/*
+rm -r jobs/mpipthreads/*

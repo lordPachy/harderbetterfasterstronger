@@ -95,12 +95,13 @@ void copy_sample_sequence( rng_t *random, char *sequence, unsigned long seq_leng
  * Defining global variables, structures and functions for thread operations
  */
 
-pthread_mutex_t *pattern_mut;
-
 typedef struct pattern_recognition_args{
 	unsigned long seq_start;		// IN: thread - specific
 	unsigned long seq_chunk_size;	// IN: thread - specific
-	int pat_th_start;				// IN: thread - specific 
+	int pat_th_start;				// IN: thread - specific
+	int id;							// IN: thread - specific, debug
+	int rank; 						// IN: global, debug		
+	int *pat_lock;					// IN: global
 	int pat_n_start;				// IN: global
 	int pat_n_end;					// IN: global
 	unsigned long seq_length;		// IN: global
@@ -125,10 +126,12 @@ void *pattern_recognition(void *args){
 	char *sequence = params->sequence;
 	char **pattern = params->pattern;
 	unsigned long *pat_found = params->pat_found;
+	int rank = params->rank;
+	int id = params->id;
+	int *pat_lock = params->pat_lock;
 	//int *seq_matches = params->seq_matches;
 
 	// Debug
-	printf("Forza roma\n");
 
 	unsigned long lind;
 	int pat;
@@ -137,22 +140,21 @@ void *pattern_recognition(void *args){
 		// Each thread starts by looking up a different thread,
 		// so they don't interleave in looking for the same pattern all together
 		pat = ((idx + pat_th_start) % (pat_n_start - pat_n_end)) + pat_n_start;
-		// Debug
-		if (idx == 0){
-			printf("Pattern is %d\n", pat);
-		}
-
-		// If the mutex associated with the pattern is locked, it means
+		
+		// If the counter associated with the pattern is bigger than 0, it means
 		// the pattern has already been found and it is useless to seek it
-		if (!pthread_mutex_trylock(&pattern_mut[pat])){
+		if (pat_lock[pat] > 0){
+			//printf("Thread %d at rank %d is skipping pattern %d\n", id, rank, pat);
 			continue;
-		} else {
-			pthread_mutex_unlock(&pattern_mut[pat]);
 		}
 
 		// Debug
+		//printf("Thread %d at rank %d is analyzing pattern %d\n", id, rank, pat);
+		//fflush(stdout);
+
+		// Debug
 		if (idx == 0){
-			printf("Test is passed for pat=%d\n", pat);
+			//printf("Test is passed for pat=%d\n", pat);
 		}
 		// For each posible starting position
 		for(unsigned long start=seq_start; start <= seq_start + seq_chunk_size; start++) {
@@ -168,8 +170,11 @@ void *pattern_recognition(void *args){
 			}
 			// Check if the loop ended with a match
 			if (lind == pat_length[pat]) {
+				pat_lock[pat]++;
 				pat_found[pat] = start;
-				pthread_mutex_lock(&pattern_mut[pat]);
+				// Debug
+				//printf("Thread %d at rank %d has found pattern %d\n", id, rank, pat);
+				//fflush(stdout);
 				break;
 			}
 		}
@@ -435,26 +440,6 @@ int main(int argc, char *argv[]) {
 	random = rng_new( seed );
 	generate_rng_sequence( &random, prob_G, prob_C, prob_A, sequence, seq_length);
 
-	if (rank == 0){
-#ifdef DEBUG
-	/* DEBUG: printf sequence and patterns */
-	printf("-----------------\n");
-	printf("Sequence: ");
-	for( lind=0; lind<seq_length; lind++ ) 
-		printf( "%c", sequence[lind] );
-	printf("\n-----------------\n");
-	printf("Patterns: %d ( rng: %d, samples: %d )\n", pat_number, pat_rng_num, pat_samp_num );
-	int debug_pat;
-	for( debug_pat=0; debug_pat<pat_number; debug_pat++ ) {
-		printf( "Pat[%d]: ", debug_pat );
-		for( lind=0; lind<pat_length[debug_pat]; lind++ ) 
-			printf( "%c", pattern[debug_pat][lind] );
-		printf("\n");
-	}
-	printf("-----------------\n\n");
-#endif // DEBUG
-	}
-
 	/* 2.3.2. Other results related to the main sequence */
 	int *seq_matches;
 	seq_matches = (int *)malloc(sizeof(int) * (seq_length + 1));
@@ -481,6 +466,32 @@ int main(int argc, char *argv[]) {
 		end_idx = pat_number;
 	}
 
+#ifdef DEBUG
+	/* DEBUG: printf sequence and patterns */
+	int flag = 0;
+	if (rank != 0){
+		MPI_Recv(&flag, 1, MPI_INT, rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	}
+	printf("-----------------\n");
+	printf("IN RANK %d\n", rank);
+	printf("Sequence: ");
+	for( lind=0; lind<seq_length; lind++ ) 
+		printf( "%c", sequence[lind] );
+	printf("\n-----------------\n");
+	printf("Patterns: %d\n", end_idx - start_idx);
+	int debug_pat;
+	for( debug_pat=start_idx; debug_pat<end_idx; debug_pat++ ) {
+		printf( "Pat[%d]: ", debug_pat );
+		for( lind=0; lind<pat_length[debug_pat]; lind++ ) 
+			printf( "%c", pattern[debug_pat][lind] );
+		printf("\n");
+	}
+	printf("-----------------\n\n");
+	if (rank != size - 1){
+		MPI_Send(&flag, 1, MPI_INT, rank + 1, 0, MPI_COMM_WORLD);
+	}
+#endif
+
 	/* 5.1.2. Thread management */
 	int num_threads = NUM_THREADS;
 	pthread_t** thread_handles = malloc(sizeof(pthread_t*) * num_threads);
@@ -490,37 +501,36 @@ int main(int argc, char *argv[]) {
 	unsigned long* seq_start = (unsigned long*) malloc(sizeof(unsigned long) * num_threads);
 	unsigned long* seq_chunk_size = (unsigned long*) malloc(sizeof(unsigned long) * num_threads);
 	int* pat_th_start = (int*) malloc(sizeof(int) * num_threads);
+	int* id = (int*) malloc(sizeof(int)*num_threads);
 
-	/* 5.1.4. Allocating pattern locks */
-	// Each pattern has an associated lock that is set when
+	/* 5.1.4. Allocating pattern "locks" */
+	// Each pattern has an associated counter that is augmented when
 	// the pattern has been found.
 	// This will be used to restrain threads from seeking patterns
 	// already found.
 
-	pattern_mut = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t) * pat_number);
-	for (int i = 0; i < pat_number; i++){
-		pthread_mutex_init(&pattern_mut[i], NULL);
-	}
+	int *pat_lock = (int*) calloc(sizeof(int), pat_number);
 
 	/* 5.1.3. Return parameters */
 	unsigned long **thread_pat_found = (unsigned long**) malloc(sizeof(unsigned long*)*num_threads);
-	printf("Check 0 for rank %d\n", rank);
-	fflush(stdout);
 	/* 5.2. Spawning threads */
 	for (int i = 0; i < num_threads; i++){
 		/* 5.2.1 Initializing thread handles */
 		thread_handles[i] = malloc(sizeof(pthread_t));
 
 		/* 5.2.2 Initializing function parameters */
-		seq_start[i] = seq_length/num_threads * i;
-		pat_th_start[i] = (end_idx - start_idx)/num_threads * i;
+		id[i] = i;
+		seq_start[i] = i * seq_length/num_threads;
+		//printf("%d.%d will start looking at sequence from %lu\n", rank, id[i], seq_start[i]);
+		pat_th_start[i] = i * (end_idx - start_idx)/num_threads;
+		//printf("%d.%d will start looking at patterns from %d\n", rank, id[i], pat_th_start[i] + start_idx);
 		if (i == num_threads - 1){
 			seq_chunk_size[i] = seq_length - seq_start[i];
 		} else {
 			seq_chunk_size[i] = seq_length/((unsigned long)num_threads);
 		}
 
-		thread_pat_found[i] = (unsigned long*) calloc(sizeof(unsigned long), pat_number);
+		thread_pat_found[i] = (unsigned long*) malloc(sizeof(unsigned long)*pat_number);
 		for(ind = 0; ind < pat_number; ind++) {
 			thread_pat_found[i][ind] = (unsigned long)NOT_FOUND;
 		}
@@ -529,6 +539,9 @@ int main(int argc, char *argv[]) {
 			seq_start[i],
 			seq_chunk_size[i],
 			pat_th_start[i],
+			id[i],
+			rank,
+			pat_lock,
 			start_idx,
 			end_idx,
 			seq_length,
@@ -542,11 +555,14 @@ int main(int argc, char *argv[]) {
 		pthread_create(thread_handles[i], NULL, pattern_recognition, (void*) &args[i]);
 	}
 
-	printf("Check 1 for rank %d\n", rank);
-	fflush(stdout);
+	//printf("Check 1 for rank %d\n", rank);
+	//fflush(stdout);
 	/* 5.3. Joining threads */
-	for (int i = 0; i < num_threads; i++){
+	// Threads are joined in reverse order since the first threads
+	// could take more, given they might have to match longer sequences
+	for (int i = num_threads - 1; i >= 0; i--){
 		pthread_join(*thread_handles[i], NULL);
+		//printf("Check 2 for rank %d:\nThread %d has been gathered\n", rank, i);
 		/* 5.4 Gathering partial results and assemblating them */
 		/* 5.4.1. Pattern matches */
 		for (pat = start_idx; pat < end_idx; pat++){
@@ -559,7 +575,7 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
-
+	//printf("Check 3 for rank %d\n", rank);
 	/* 6. Exchanging information */
 	/* 6.0. This will be needed later for exchanging seq_matches */
 	unsigned long index;
@@ -648,23 +664,35 @@ int main(int argc, char *argv[]) {
 
 #ifdef DEBUG
 	/* DEBUG: Write results */
-	printf("-----------------\n");
-	printf("Found start:");
-	for( debug_pat=0; debug_pat<pat_number; debug_pat++ ) {
-		printf( " %lu", pat_found[debug_pat] );
+	if (rank == 0){
+		printf("-----------------\n");
+		printf("Found start:");
+		for( debug_pat=0; debug_pat<pat_number; debug_pat++ ) {
+			printf( " %lu", pat_found[debug_pat] );
+		}
+		printf("\n");
+		printf("-----------------\n");
+		printf("Matches:");
+		for( lind=0; lind<seq_length; lind++ ) 
+			printf( " %d", seq_matches[lind] );
+		printf("\n");
+		printf("-----------------\n");
 	}
-	printf("\n");
-	printf("-----------------\n");
-	printf("Matches:");
-	for( lind=0; lind<seq_length; lind++ ) 
-		printf( " %d", seq_matches[lind] );
-	printf("\n");
-	printf("-----------------\n");
 #endif // DEBUG
 
 	/* Free local resources */	
 	free( sequence );
 	free( seq_matches );
+	for (int j = 0; j < num_threads; j++){
+		free(thread_handles[j]);
+		free(thread_pat_found[j]);
+	}	
+	free(thread_pat_found);
+	free(thread_handles);
+	free(args);
+	free(seq_start);
+	free(seq_chunk_size);
+	free(pat_th_start);
 
 /*
  *

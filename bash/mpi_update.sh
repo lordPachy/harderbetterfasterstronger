@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd  logs/mpi_bcast
+cd  logs/mpipthreads
 bash logs.sh
 cd ../..
-cd  jobs/mpi_bcast
+cd  jobs/mpipthreads
 bash jobs.sh
 cd ../..
