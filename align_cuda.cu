@@ -190,49 +190,54 @@ ALSO KERNEL IS BROKEN AND NEEDS DEBUGGING
 
 // parallelization on sequence with shared memory
 	__global__ void find_patterns(
+		unsigned long seq_len, 
+		char *sequence, 
+		char **patterns, 
+		unsigned long *pattern_found, 
+		unsigned long *pat_length, 
+		int resp_thread)
+		{
+		int pat = blockIdx.x;
+		// init in shared memory and registers
+		unsigned long th_seq_len = seq_len;
+		unsigned long th_pat_len = pat_length[pat];
+		unsigned long i,j;
+
+		//loop for paralellizing seq
+		for(i = 0; i+th_pat_len <= th_seq_len; i += blockDim.x){
+			//check the pattern
+			for(j = 0; j<th_pat_len; j++){
+				if(sequence[threadIdx.x + i + j] != patterns[pat][j]) break;
+			}
+			// check if last loop ended in match
+			if(j==th_pat_len){
+				pattern_found[pat] = i;
+				return;
+			}
+		}
+	}
+
+// parallelization on sequence with manual shared memory 
+	__global__ void find_patternsv5(
 		unsigned long *seq_len, 
 		char *sequence, 
 		char **patterns, 
 		unsigned long *pattern_found, 
 		unsigned long *pat_length, 
-		int *resp_thread)
-		{
+		int *resp){
 		int pat = blockIdx.x;
-		// init in shared memory and registers
-		unsigned long th_seq_len = *seq_len;
-		unsigned long th_pat_len = pat_length[pat];
-
-		unsigned long idx = (th_seq_len / blockDim.x) * threadIdx.x;
+		unsigned long idx =  threadIdx.x;
 		unsigned long i,j;
 
-		
-
-		extern __shared__ char sh[];
-		char *sh_seq = sh;
-		char *sh_pat = &sh_seq[th_seq_len];
-
-		
-		// copy sequence from global into shared
-		for(i=0; i < th_seq_len; i+=blockDim.x){
-			if(threadIdx.x+i < th_seq_len) sh_seq[threadIdx.x+i] = sequence[threadIdx.x+i];
-		} 
-		//if (threadIdx.x==0)printf("this is the sequence: %s\n", sh_seq);
-		// copy pattern to shared
-		for(i=0; i < th_pat_len; i+=blockDim.x){
-			if(threadIdx.x+i < th_pat_len) sh_pat[threadIdx.x+i] = patterns[pat][threadIdx.x+i];
-		} 
-		//if (threadIdx.x == 0) printf("this is the pattern: %s\n", sh_pat);
-
-		__syncthreads();
 
 		//loop for paralellizing seq
-		for(i = idx; i<idx+blockDim.x && i+th_pat_len <= th_seq_len; i++){
+		for(i = 0; i+pat_length[pat]+idx<=*seq_len; i++){
 			//check the pattern
-			for(j = 0; j<th_pat_len; j++){
-				if(sh_seq[i+j] != sh_pat[j]) break;
+			for(j = 0; j<pat_length[pat]; j++){
+				if(sequence[idx+i+j] != patterns[pat][j]) break;
 			}
 			// check if last loop ended in match
-			if(j==th_pat_len){
+			if(j==pat_length[pat]){
 				pattern_found[pat] = i;
 				return;
 			}
@@ -583,21 +588,17 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	// 1024 is max threads per block on cluster
-	int block = 1024;
+	int block = 256;
 	int sects = 1;
 	int resp_thread = (int)ceil((double)(longest - block)/(2*block));
 	dim3 grid(pat_number,sects);
 
     char *d_sequence;
 	unsigned long *d_pat_found_cuda;
-	unsigned long *d_seq_length;
-	int *d_resp_thread;
 	bool **d_isTheSame;
 
 	CUDA_CHECK_FUNCTION(cudaMalloc(&d_sequence, sizeof(char) * seq_length));
 	CUDA_CHECK_FUNCTION(cudaMalloc(&d_pat_found_cuda, sizeof(unsigned long) * pat_number));
-	CUDA_CHECK_FUNCTION(cudaMalloc(&d_seq_length, sizeof(unsigned long)));
-	CUDA_CHECK_FUNCTION(cudaMalloc(&d_resp_thread, sizeof(int)));
 	CUDA_CHECK_FUNCTION(cudaMalloc(&d_isTheSame, sizeof(bool*) * pat_number));
 
 
@@ -611,11 +612,9 @@ int main(int argc, char *argv[]) {
 	CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_length,  pat_length, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
 	CUDA_CHECK_FUNCTION(cudaMemcpy( d_sequence, sequence, sizeof(char) * seq_length, cudaMemcpyHostToDevice));
     CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_found_cuda,  pat_found, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
-	CUDA_CHECK_FUNCTION(cudaMemcpy( d_seq_length, &seq_length, sizeof(unsigned long), cudaMemcpyHostToDevice));
-	CUDA_CHECK_FUNCTION(cudaMemcpy( d_resp_thread, &resp_thread, sizeof(int), cudaMemcpyHostToDevice));
 
-	find_patterns<<<grid, block, sizeof(char)*seq_length + sizeof(char)*longest + sizeof(bool)>>>
-	(d_seq_length, d_sequence, d_pattern, d_pat_found_cuda, d_pat_length, d_resp_thread);
+	find_patterns<<<grid, block>>>
+	(seq_length, d_sequence, d_pattern, d_pat_found_cuda, d_pat_length, resp_thread);
 	cudaDeviceSynchronize();
 	CUDA_CHECK_KERNEL();
 
@@ -681,6 +680,8 @@ int main(int argc, char *argv[]) {
 			pat_matches,
 			checksum_found,
 			checksum_matches );
+	
+	printf("longest is:%lu\n", longest);
 
 		
 	/* 10. Free resources */	

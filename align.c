@@ -394,6 +394,13 @@ int main(int argc, char *argv[]) {
 		checksum_matches = ( checksum_matches + seq_matches[lind] ) % CHECKSUM_MAX;
 	}
 
+	int longest = 0;
+	for(int i =0; i<pat_number;i++){
+		if(pat_length[i] > longest){
+			longest = pat_length[i];
+		}
+	}
+
 #ifdef DEBUG
 	/* DEBUG: Write results */
 	printf("-----------------\n");
@@ -433,6 +440,7 @@ int main(int argc, char *argv[]) {
 			pat_matches,
 			checksum_found,
 			checksum_matches );
+	printf("longest pat is %d\n", longest);
 		
 	/* 10. Free resources */	
 	int i;

@@ -14,7 +14,7 @@ int main()
         cudaDeviceProp pr;
         for(int i = 0; i<deviceCount;i++){
 	cudaGetDeviceProperties(&pr, i);
-	printf("Dev #%lu is %d \n", sizeof(char), pr.maxThreadsPerBlock);
+	printf("Dev #%lu is %d \n", sizeof(char), pr.multiProcessorCount);
 	}
     }
     return 1;
