@@ -28,3 +28,30 @@
 
 	Job terminated of its own accord at 2025-01-30T14:36:59Z with exit-code 0.
 ...
+000 (293765.000.000) 2025-01-30 14:49:37 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_4045053_7bc0>
+...
+001 (293765.000.000) 2025-01-30 14:50:27 Job executing on host: <192.168.0.123:9618?addrs=192.168.0.123-9618&alias=node123.di.rm1&noUDP&sock=startd_2149_9d1d>
+...
+006 (293765.000.000) 2025-01-30 14:50:36 Image size of job updated: 630244
+	596  -  MemoryUsage of job (MB)
+	609916  -  ResidentSetSize of job (KB)
+...
+006 (293765.000.000) 2025-01-30 14:50:38 Image size of job updated: 6183964
+	596  -  MemoryUsage of job (MB)
+	610180  -  ResidentSetSize of job (KB)
+...
+004 (293765.000.000) 2025-01-30 14:50:38 Job was evicted.
+	(0) CPU times
+		Usr 0 00:00:09, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated Assigned
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :      750      750    499900 
+	   Gpus (Average)       :                 1         1 "GPU-94808f3e"
+	   Memory (MB)          :      596        1       128 
+...
+009 (293765.000.000) 2025-01-30 14:50:38 Job was aborted.
+	via condor_rm (by user calzona_2046920)
+...
