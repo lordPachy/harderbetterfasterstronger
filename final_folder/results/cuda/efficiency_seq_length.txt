@@ -1,0 +1,107 @@
+For configuration [1.024000e+03 1.048576e+06], there was not enough data.
+Sequential data: 1
+Parallel data: 1
+For configuration [32768.  4096.], there was not enough data.
+Sequential data: 1
+Parallel data: 1
+For configuration [1.048576e+06 1.600000e+01], there was not enough data.
+Sequential data: 1
+Parallel data: 1
+Sequential vs cuda on seq_length for fixed
+patterns=1024.0
+mean_pat_length=16.0
+
+   1024.0  32768.0  1048576.0
+1     1.0      1.0        1.0
+0     NaN      NaN        NaN
+0     NaN      NaN        NaN
+0     NaN      NaN        NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=1024.0
+mean_pat_length=64.0
+
+   1024.0  32768.0  1048576.0
+1     1.0      1.0        1.0
+0     NaN      NaN        NaN
+0     NaN      NaN        NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=1024.0
+mean_pat_length=256.0
+
+   1024.0  32768.0  1048576.0
+1     1.0      1.0        1.0
+0     NaN      NaN        NaN
+0     NaN      NaN        NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=1024.0
+mean_pat_length=1024.0
+
+   1024.0  32768.0  1048576.0
+1     1.0      1.0        1.0
+0     NaN      NaN        NaN
+0     NaN      NaN        NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=1024.0
+mean_pat_length=4096.0
+
+   32768.0  1048576.0
+1      1.0        1.0
+0      NaN        NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=32768.0
+mean_pat_length=16.0
+
+   1024.0  32768.0
+1     1.0      1.0
+0     NaN      NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=32768.0
+mean_pat_length=64.0
+
+   1024.0  32768.0
+1     1.0      1.0
+0     NaN      NaN
+0     NaN      NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=32768.0
+mean_pat_length=256.0
+
+   1024.0  32768.0
+1     1.0      1.0
+0     NaN      NaN
+0     NaN      NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=32768.0
+mean_pat_length=1024.0
+
+   1024.0  32768.0
+1     1.0      1.0
+0     NaN      NaN
+0     NaN      NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=1048576.0
+mean_pat_length=64.0
+
+   1024.0
+1     1.0
+0     NaN
+0     NaN
+------------------------------------------------------------------------
+Sequential vs cuda on seq_length for fixed
+patterns=1048576.0
+mean_pat_length=256.0
+
+   1024.0
+1     1.0
+0     NaN
+0     NaN
+------------------------------------------------------------------------
