@@ -54,12 +54,12 @@ double cp_Wtime(){
  */
 /* ADD KERNELS AND OTHER FUNCTIONS HERE */
 //define kernel
-/*parallelize on input and patterns:
-no use of shared mem
-cannot handle patterns bigger than max block size
+
+/*
+parallelize on seqence and patterns:
+no extensive use of shared mem
 block: 1024, grid: pat_number
 */ 
-
 	__global__ void find_patternsv1(
 		unsigned long *seq_len, 
 		char *sequence, 
@@ -85,9 +85,10 @@ block: 1024, grid: pat_number
 		}
 	}
 /*
-grid = (pat_number)
-block = 1024
-*/
+parallelize on literals of pattern and patterns:
+no extensive use of shared mem
+block: 1024, grid: pat_number
+*/ 
 	__global__ void find_patternsv2(
 		unsigned long *seq_len, 
 		char *sequence, 
@@ -126,12 +127,12 @@ block = 1024
 			if(threadIdx.x == 0) isTheSame[0] = true;
 		}
 	}
+
 /*
-grid = (pat_number)
-block = 1024
-REMEMEBR THE EXTRA BIT OF SHARED MEM
-ALSO KERNEL IS BROKEN AND NEEDS DEBUGGING
-*/
+parallelize on literals of pattern and patterns:
+extensive use of shared mem
+block: 1024, grid: pat_number
+*/ 
 	__global__ void find_patternsv3(
 		unsigned long *seq_len, 
 		char *sequence, 
@@ -188,7 +189,11 @@ ALSO KERNEL IS BROKEN AND NEEDS DEBUGGING
 		}
 	}
 
-// parallelization on sequence with shared memory
+/* 
+parallelization on sequence without shared memory
+coalescenced memory accesses
+block: 256, grid: pat_number
+*/
 	__global__ void find_patterns(
 		unsigned long seq_len, 
 		char *sequence, 
@@ -211,33 +216,6 @@ ALSO KERNEL IS BROKEN AND NEEDS DEBUGGING
 			}
 			// check if last loop ended in match
 			if(j==th_pat_len){
-				pattern_found[pat] = i;
-				return;
-			}
-		}
-	}
-
-// parallelization on sequence with manual shared memory 
-	__global__ void find_patternsv5(
-		unsigned long *seq_len, 
-		char *sequence, 
-		char **patterns, 
-		unsigned long *pattern_found, 
-		unsigned long *pat_length, 
-		int *resp){
-		int pat = blockIdx.x;
-		unsigned long idx =  threadIdx.x;
-		unsigned long i,j;
-
-
-		//loop for paralellizing seq
-		for(i = 0; i+pat_length[pat]+idx<=*seq_len; i++){
-			//check the pattern
-			for(j = 0; j<pat_length[pat]; j++){
-				if(sequence[idx+i+j] != patterns[pat][j]) break;
-			}
-			// check if last loop ended in match
-			if(j==pat_length[pat]){
 				pattern_found[pat] = i;
 				return;
 			}
@@ -532,7 +510,7 @@ int main(int argc, char *argv[]) {
  * DO NOT USE OpenMP IN YOUR CODE
  *
  */
-	setbuf(stdout, NULL);
+
 	/* 2.1. Allocate and fill sequence */
 	char *sequence = (char *)malloc( sizeof(char) * seq_length );
 	if ( sequence == NULL ) {
@@ -579,6 +557,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* 5. Search for each pattern */
+	/* 5.1 calculate dynamically grid dim*/
 	// identify longest pattern to assign resources
 	unsigned long longest = 0;
     for(int pat = 0; pat<pat_number; pat++){
@@ -593,6 +572,7 @@ int main(int argc, char *argv[]) {
 	int resp_thread = (int)ceil((double)(longest - block)/(2*block));
 	dim3 grid(pat_number,sects);
 
+	/* 5.2 allocate and copy memory to the device*/
     char *d_sequence;
 	unsigned long *d_pat_found_cuda;
 	bool **d_isTheSame;
@@ -613,11 +593,13 @@ int main(int argc, char *argv[]) {
 	CUDA_CHECK_FUNCTION(cudaMemcpy( d_sequence, sequence, sizeof(char) * seq_length, cudaMemcpyHostToDevice));
     CUDA_CHECK_FUNCTION(cudaMemcpy( d_pat_found_cuda,  pat_found, sizeof(unsigned long) * pat_number, cudaMemcpyHostToDevice));
 
+	/* 5.3 launch the kernel */
 	find_patterns<<<grid, block>>>
 	(seq_length, d_sequence, d_pattern, d_pat_found_cuda, d_pat_length, resp_thread);
 	cudaDeviceSynchronize();
 	CUDA_CHECK_KERNEL();
 
+	/* 5.4 increase matches */
 	CUDA_CHECK_FUNCTION(cudaMemcpy( pat_found, d_pat_found_cuda, sizeof(unsigned long) * pat_number, cudaMemcpyDeviceToHost));
 	for(int pat = 0; pat < pat_number; pat++){
 		if ( pat_found[pat] != (unsigned long)NOT_FOUND ) {
@@ -680,8 +662,6 @@ int main(int argc, char *argv[]) {
 			pat_matches,
 			checksum_found,
 			checksum_matches );
-	
-	printf("longest is:%lu\n", longest);
 
 		
 	/* 10. Free resources */	

@@ -22,7 +22,7 @@ CUDAFLAGS=-O3 -Xcompiler -Wall
 GPROF=-pg
 
 # Targets to build
-OBJS=align_seq align_mpi align_pthread align_omp align_mpiomp
+OBJS=align_seq align_mpi align_pthread
 
 # Rules. By default show help
 help:
