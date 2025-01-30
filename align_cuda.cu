@@ -61,18 +61,18 @@ no extensive use of shared mem
 block: 1024, grid: pat_number
 */ 
 	__global__ void find_patternsv1(
-		unsigned long *seq_len, 
+		unsigned long seq_len, 
 		char *sequence, 
 		char **patterns, 
 		unsigned long *pattern_found, 
 		unsigned long *pat_length, 
-		int *resp)
+		int resp)
 		{
 		int pat = blockIdx.x;
-		unsigned long idx = (unsigned long)((*seq_len / blockDim.x) * threadIdx.x);
+		unsigned long idx = (unsigned long)((seq_len / blockDim.x) * threadIdx.x);
 		unsigned long i,j;
 		//loop for paralellizing seq
-		for(i = idx; i<idx+blockDim.x && i+pat_length[pat]<=*seq_len; i++){
+		for(i = idx; i<idx+blockDim.x && i+pat_length[pat]<=seq_len; i++){
 			//check the pattern
 			for(j = 0; j<pat_length[pat]; j++){
 				if(sequence[i+j] != patterns[pat][j]) break;
@@ -90,12 +90,12 @@ no extensive use of shared mem
 block: 1024, grid: pat_number
 */ 
 	__global__ void find_patternsv2(
-		unsigned long *seq_len, 
+		unsigned long seq_len, 
 		char *sequence, 
 		char **patterns, 
 		unsigned long *pattern_found, 
 		unsigned long *pat_length, 
-		int *resp_thread)
+		int resp_thread)
 		{
 		int pat = blockIdx.x;
 		unsigned long idx = blockIdx.y*blockDim.x + threadIdx.x;
@@ -107,9 +107,9 @@ block: 1024, grid: pat_number
 		// init isTheSame
 		isTheSame[0] = true;
 
-		for(i = 0; i < *seq_len - pat_length[pat]+1; i++){
+		for(i = 0; i < seq_len - pat_length[pat]+1; i++){
 			if(idx < pat_length[pat]){
-				for(int j = 0; j < *resp_thread; j++){
+				for(int j = 0; j < resp_thread; j++){
 					if (idx+j < pat_length[pat]){
 						if(patterns[pat][idx+j] != sequence[idx+i+j]){
 							isTheSame[0] = false;
@@ -134,18 +134,18 @@ extensive use of shared mem
 block: 1024, grid: pat_number
 */ 
 	__global__ void find_patternsv3(
-		unsigned long *seq_len, 
+		unsigned long seq_len, 
 		char *sequence, 
 		char **patterns, 
 		unsigned long *pattern_found, 
 		unsigned long *pat_length, 
-		int *resp_thread)
+		int resp_thread)
 		{
-		int th_radius = *resp_thread;
+		int th_radius = resp_thread;
 		int pat = blockIdx.x;
 		unsigned long idx = 2*th_radius*(threadIdx.x+1);
 		unsigned long i;
-		unsigned long th_seq_len = *seq_len;
+		unsigned long th_seq_len = seq_len;
 		unsigned long th_pat_len = pat_length[pat];
 
 		//shared memory for sequence and one pattern
@@ -194,7 +194,7 @@ parallelization on sequence without shared memory
 coalescenced memory accesses
 block: 256, grid: pat_number
 */
-	__global__ void find_patterns(
+	__global__ void find_patternsfinal(
 		unsigned long seq_len, 
 		char *sequence, 
 		char **patterns, 
@@ -219,6 +219,41 @@ block: 256, grid: pat_number
 				pattern_found[pat] = i;
 				return;
 			}
+			__syncthreads();
+		}
+	}
+/* 
+parallelization on sequence without shared memory
+coalescenced memory accesses
+block: 256, grid: pat_number/2
+*/
+	__global__ void find_patterns(
+		unsigned long seq_len, 
+		char *sequence, 
+		char **patterns, 
+		unsigned long *pattern_found, 
+		unsigned long *pat_length, 
+		int resp_thread)
+		{
+		int pat = blockIdx.x;
+		// init in shared memory and registers
+		unsigned long th_seq_len = seq_len;
+		unsigned long th_pat_len = pat_length[pat];
+		unsigned long i,j;
+
+		//loop for paralellizing seq
+		for(i = 0; i+th_pat_len <= th_seq_len; i += blockDim.x){
+			//check the pattern
+			for(j = 0; j<th_pat_len; j++){
+				if(sequence[threadIdx.x + i + j] != patterns[pat][j]) break;
+			}
+			// check if last loop ended in match
+			if(j==th_pat_len){
+				pattern_found[pat] = i;
+				
+				return;
+			}
+			__syncthreads();
 		}
 	}
 /*
@@ -641,6 +676,15 @@ int main(int argc, char *argv[]) {
 	/* Free local resources */	
 	free( sequence );
 	free( seq_matches );
+
+
+	cudaFree(d_pat_length); cudaFree(d_pattern);
+	for(int i=0; i<pat_number; i++ ) cudaFree( &d_pattern_in_host[i] );
+	cudaFree(d_sequence); cudaFree(d_pat_found_cuda); cudaFree(d_isTheSame);
+	for(int i=0; i<pat_number; i++ ) cudaFree( host_isTheSame[i] );
+	
+	free(d_pattern_in_host);
+	free(host_isTheSame);
 
 /*
  *
