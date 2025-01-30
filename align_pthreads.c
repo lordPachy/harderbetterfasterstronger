@@ -17,9 +17,6 @@
 #include<limits.h>
 #include<sys/time.h>
 #include<pthread.h>
-#ifndef NUM_THREADS
-#define NUM_THREADS 1
-#endif
 
 /* Arbitrary value to indicate that no matches are found */
 #define	NOT_FOUND	-1
@@ -48,6 +45,10 @@ double cp_Wtime(){
  * START HERE: DO NOT CHANGE THE CODE ABOVE THIS POINT
  *
  */
+
+#ifndef NUM_THREADS
+#define NUM_THREADS 1
+#endif
 
 /*
  * Function: Increment the number of pattern matches on the sequence positions
