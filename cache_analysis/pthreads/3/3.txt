@@ -1,0 +1,14 @@
+# started on Thu Jan 30 11:55:07 2025
+
+
+ Performance counter stats for '../align_pthread 100000 0.35 0.2 0.25 10000 9000 16 10000 9000 16 50000 25000 M 4353435':
+
+        65.221.318      cache-references                                                      
+         3.963.821      cache-misses                     #    6,08% of all cache refs         
+
+       3,156552658 seconds time elapsed
+
+       4,738063000 seconds user
+       0,071000000 seconds sys
+
+

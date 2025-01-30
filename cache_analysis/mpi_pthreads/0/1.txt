@@ -1,0 +1,14 @@
+# started on Thu Jan 30 11:54:29 2025
+
+
+ Performance counter stats for 'mpirun -n 2 ../align_mpipthread 300 0.1 0.3 0.35 100 5 5 300 150 50 150 80 M 609823':
+
+           605.458      cache-references                                                      
+           116.680      cache-misses                     #   19,27% of all cache refs         
+
+       0,002534491 seconds time elapsed
+
+       0,000000000 seconds user
+       0,002571000 seconds sys
+
+

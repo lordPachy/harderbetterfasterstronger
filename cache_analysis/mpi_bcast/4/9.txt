@@ -1,0 +1,14 @@
+# started on Thu Jan 30 12:10:00 2025
+
+
+ Performance counter stats for 'mpirun -n 4 ../align_mpi_bcast 100000 0.35 0.2 0.25 0 0 0 100000 100000 0 0 0 M 4353435':
+
+           573.319      cache-references                                                      
+           115.126      cache-misses                     #   20,08% of all cache refs         
+
+       0,002498331 seconds time elapsed
+
+       0,000851000 seconds user
+       0,001702000 seconds sys
+
+

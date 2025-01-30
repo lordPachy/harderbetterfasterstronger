@@ -1,0 +1,14 @@
+# started on Thu Jan 30 11:54:40 2025
+
+
+ Performance counter stats for 'mpirun -n 4 ../align_mpi 10000 0.35 0.2 0.25 10000 900 900 10000 900 900 500 250 M 4353435':
+
+           608.758      cache-references                                                      
+           117.844      cache-misses                     #   19,36% of all cache refs         
+
+       0,003129781 seconds time elapsed
+
+       0,001055000 seconds user
+       0,002110000 seconds sys
+
+
