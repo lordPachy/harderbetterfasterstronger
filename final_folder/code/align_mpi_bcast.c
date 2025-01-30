@@ -2,12 +2,12 @@
  * Exact genetic sequence alignment
  * (Using brute force)
  *
- * OpenMP version
+ * MPI version
  *
  * Computacion Paralela, Grado en Informatica (Universidad de Valladolid)
  * 2023/2024
  *
- * v1.2
+ * v1.3
  *
  * (c) 2024, Arturo Gonzalez-Escribano
  */
@@ -16,10 +16,8 @@
 #include<string.h>
 #include<limits.h>
 #include<sys/time.h>
-#include<pthread.h>
-#ifndef NUM_THREADS
-#define NUM_THREADS 1
-#endif
+#include<mpi.h>
+
 
 /* Arbitrary value to indicate that no matches are found */
 #define	NOT_FOUND	-1
@@ -56,7 +54,7 @@ double cp_Wtime(){
 void increment_matches( int pat, unsigned long *pat_found, unsigned long *pat_length, int *seq_matches ) {
 	unsigned long ind;	
 	for( ind=0; ind<pat_length[pat]; ind++) {
-		seq_matches[ pat_found[pat] + ind ] ++;
+		seq_matches[ pat_found[pat] + ind ]++;
 	}
 }
 
@@ -89,69 +87,6 @@ void copy_sample_sequence( rng_t *random, char *sequence, unsigned long seq_leng
 		pattern[ind] = sequence[ind+location];
 }
 
-/**
- * Defining global variables, structures and functions for thread operations
- */
-
-
-typedef struct pattern_recognition_args{
-	int pat_n_start;				// IN: thread - specific
-	int pat_n_end;					// IN: thread - specific
-	unsigned long seq_length;		// IN: global
-	unsigned long *pat_length;		// IN: global
-	char *sequence;					// IN: global
-	char **pattern;					// IN: global
-	int *pat_matches;				// OUT: thread - specific
-	unsigned long *pat_found; 		// OUT: thread - specific
-	int *seq_matches;				// OUT: thread - specific
-	
-}pattern_recognition_args;
-
-void *pattern_recognition(void *args){
-	// Taking the function arguments
-	pattern_recognition_args *params = (pattern_recognition_args*) args;
-	int pat_n_start = params->pat_n_start;
-	int pat_n_end = params->pat_n_end;
-	unsigned long seq_length = params->seq_length;
-	unsigned long *pat_length = params->pat_length;
-	char *sequence = params->sequence;
-	int *pat_matches = params->pat_matches;
-	unsigned long *pat_found = params->pat_found;
-	int *seq_matches = params->seq_matches;
-	char **pattern = params->pattern;
-
-	unsigned long lind;
-
-	for(int pat=pat_n_start; pat < pat_n_end; pat++) {
-			/* 5.1. For each posible starting position */
-			for(unsigned long start=0; start <= seq_length - pat_length[pat]; start++) {
-
-				/* 5.1.1. For each pattern element */
-				for(lind=0; lind<pat_length[pat]; lind++) {
-					/* Stop this test when different nucleotids are found */
-					if ( sequence[start + lind] != pattern[pat][lind] ) break;
-				}
-				/* 5.1.2. Check if the loop ended with a match */
-				if (lind == pat_length[pat]) {
-					(*pat_matches)++;
-					pat_found[pat] = start;
-					break;
-				}
-			}
-
-			/* 5.2. Pattern found */
-			if ( pat_found[pat] != (unsigned long)NOT_FOUND ) {
-				/* 4.2.1. Increment the number of pattern matches on the sequence positions */
-				for(unsigned long ind=0; ind<pat_length[pat]; ind++) {
-					seq_matches[ pat_found[pat] + ind ] ++;
-				}
-			}
-		}
-	
-	return NULL;
-}
-
-
 /*
  *
  * STOP HERE: DO NOT CHANGE THE CODE BELOW THIS POINT
@@ -172,7 +107,7 @@ char *pattern_allocate( rng_t *random, unsigned long pat_rng_length_mean, unsign
 	char *pattern = (char *)malloc( sizeof(char) * length );
 	if ( pattern == NULL ) {
 		fprintf(stderr,"\n-- Error allocating a pattern of size: %lu\n", length );
-		exit( EXIT_FAILURE );
+		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 	}
 
 	/* Return results */
@@ -217,11 +152,16 @@ int main(int argc, char *argv[]) {
 	setbuf(stderr, NULL);
 
 	/* 1. Read scenary arguments */
+	/* 1.0. Init MPI before processing arguments */
+	MPI_Init( &argc, &argv );
+	int rank;
+	MPI_Comm_rank( MPI_COMM_WORLD, &rank );
+
 	/* 1.1. Check minimum number of arguments */
 	if (argc < 15) {
 		fprintf(stderr, "\n-- Error: Not enough arguments when reading configuration from the command line\n\n");
 		show_usage( argv[0] );
-		exit( EXIT_FAILURE );
+		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 	}
 
 	/* 1.2. Read argument values */
@@ -232,7 +172,7 @@ int main(int argc, char *argv[]) {
 	if ( prob_G + prob_C + prob_A > 1 ) {
 		fprintf(stderr, "\n-- Error: The sum of G,C,A,T nucleotid probabilities cannot be higher than 1\n\n");
 		show_usage( argv[0] );
-		exit( EXIT_FAILURE );
+		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 	}
 	prob_C += prob_G;
 	prob_A += prob_C;
@@ -251,19 +191,21 @@ int main(int argc, char *argv[]) {
 	if ( pat_samp_mix != 'B' && pat_samp_mix != 'A' && pat_samp_mix != 'M' ) {
 		fprintf(stderr, "\n-- Error: Incorrect first character of pat_samp_mix: %c\n\n", pat_samp_mix);
 		show_usage( argv[0] );
-		exit( EXIT_FAILURE );
+		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 	}
 
 	unsigned long seed = atol( argv[14] );
 
 #ifdef DEBUG
 	/* DEBUG: Print arguments */
-	printf("\nArguments: seq_length=%lu\n", seq_length );
-	printf("Arguments: Accumulated probabilitiy G=%f, C=%f, A=%f, T=1\n", prob_G, prob_C, prob_A );
-	printf("Arguments: Random patterns number=%d, length_mean=%lu, length_dev=%lu\n", pat_rng_num, pat_rng_length_mean, pat_rng_length_dev );
-	printf("Arguments: Sample patterns number=%d, length_mean=%lu, length_dev=%lu, loc_mean=%lu, loc_dev=%lu\n", pat_samp_num, pat_samp_length_mean, pat_samp_length_dev, pat_samp_loc_mean, pat_samp_loc_dev );
-	printf("Arguments: Type of mix: %c, Random seed: %lu\n", pat_samp_mix, seed );
-	printf("\n");
+	if ( rank == 0 ) {
+		printf("\nArguments: seq_length=%lu\n", seq_length );
+		printf("Arguments: Accumulated probabilitiy G=%f, C=%f, A=%f, T=1\n", prob_G, prob_C, prob_A );
+		printf("Arguments: Random patterns number=%d, length_mean=%lu, length_dev=%lu\n", pat_rng_num, pat_rng_length_mean, pat_rng_length_dev );
+		printf("Arguments: Sample patterns number=%d, length_mean=%lu, length_dev=%lu, loc_mean=%lu, loc_dev=%lu\n", pat_samp_num, pat_samp_length_mean, pat_samp_length_dev, pat_samp_loc_mean, pat_samp_loc_dev );
+		printf("Arguments: Type of mix: %c, Random seed: %lu\n", pat_samp_mix, seed );
+		printf("\n");
+	}
 #endif // DEBUG
 
 	/* 2. Initialize data structures */
@@ -278,7 +220,7 @@ int main(int argc, char *argv[]) {
 	char **pattern = (char **)malloc( sizeof(char*) * pat_number );
 	if ( pattern == NULL || pat_length == NULL ) {
 		fprintf(stderr,"\n-- Error allocating the basic patterns structures for size: %d\n", pat_number );
-		exit( EXIT_FAILURE );
+		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 	}
 
 	/* 2.2.2 Allocate and initialize ancillary structure for pattern types */
@@ -290,7 +232,7 @@ int main(int argc, char *argv[]) {
 	char *pat_type = (char *)malloc( sizeof(char) * pat_number );
 	if ( pat_type == NULL ) {
 		fprintf(stderr,"\n-- Error allocating ancillary structure for pattern of size: %d\n", pat_number );
-		exit( EXIT_FAILURE );
+		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 	}
 	for( ind=0; ind<pat_number; ind++ ) pat_type[ind] = PAT_TYPE_NONE;
 
@@ -343,7 +285,7 @@ int main(int argc, char *argv[]) {
 		}
 		else {
 			fprintf(stderr,"\n-- Error internal: Paranoic check! A pattern without type at position %d\n", ind );
-			exit( EXIT_FAILURE );
+			MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 		}
 	}
 	free( pat_type );
@@ -371,10 +313,11 @@ int main(int argc, char *argv[]) {
 	pat_found = (unsigned long *)malloc( sizeof(unsigned long) * pat_number );
 	if ( pat_found == NULL ) {
 		fprintf(stderr,"\n-- Error allocating aux pattern structure for size: %d\n", pat_number );
-		exit( EXIT_FAILURE );
+		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 	}
 	
 	/* 3. Start global timer */
+	MPI_Barrier( MPI_COMM_WORLD );
 	double ttotal = cp_Wtime();
 
 /*
@@ -382,16 +325,42 @@ int main(int argc, char *argv[]) {
  * START HERE: DO NOT CHANGE THE CODE ABOVE THIS POINT
  *
  */
+	int size;
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	/* 2.1. Allocate and fill sequence */
 	char *sequence = (char *)malloc( sizeof(char) * seq_length );
 	if ( sequence == NULL ) {
 		fprintf(stderr,"\n-- Error allocating the sequence for size: %lu\n", seq_length );
-		exit( EXIT_FAILURE );
+		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 	}
 
-	random = rng_new( seed );
-	generate_rng_sequence( &random, prob_G, prob_C, prob_A, sequence, seq_length);
+	/* 2.2.0 Splitting the sequence in chunks of size INT_MAX */
+	// Calculating the number of necessary MPI_Sends (with the assumptions seq_length is not
+	// bigger than INT_MAX^2)
+	int rounds = seq_length/INT_MAX;
+	if (seq_length%INT_MAX != 0){
+		rounds++;
+	}
 
+	/* 2.2.1 Generating the sequence at rank 0 and broadcasting it to other nodes */
+	if (rank == 0){
+		random = rng_new( seed );
+		generate_rng_sequence( &random, prob_G, prob_C, prob_A, sequence, seq_length);
+	}
+
+	unsigned long index;
+	int quantity, round;
+	for (round = 0; round < rounds; round++){
+		index = round*INT_MAX;
+		if (round == rounds - 1){
+			quantity = seq_length - index;
+		} else {
+			quantity = INT_MAX;
+		}
+		MPI_Bcast(&sequence[index], quantity, MPI_CHAR, 0, MPI_COMM_WORLD);
+	}
+
+	if (rank == 0){
 #ifdef DEBUG
 	/* DEBUG: Print sequence and patterns */
 	printf("-----------------\n");
@@ -409,81 +378,129 @@ int main(int argc, char *argv[]) {
 	}
 	printf("-----------------\n\n");
 #endif // DEBUG
+	}
 
 	/* 2.3.2. Other results related to the main sequence */
 	int *seq_matches;
-	seq_matches = (int *)malloc( sizeof(int) * seq_length );
+	seq_matches = (int *)malloc(sizeof(int) * (seq_length + 1));
 	if ( seq_matches == NULL ) {
-		fprintf(stderr,"\n-- Error allocating aux sequence structures for size: %lu\n", seq_length );
-		exit( EXIT_FAILURE );
+		fprintf(stderr,"\n-- Error allocating aux sequence structures for size: %lu\n", (seq_length + 1));
+		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
 	}
 
 	/* 4. Initialize ancillary structures */
 	for( ind=0; ind<pat_number; ind++) {
-		pat_found[ind] = (unsigned long)NOT_FOUND;
+		pat_found[ind] = (unsigned long)NOT_FOUND;			// pat_found[i] means that pattern i has been found starting at position pat_found[i]
 	}
 	for( lind=0; lind<seq_length; lind++) {
-		seq_matches[lind] = 0;
+		seq_matches[lind] = 0;						// seq_matches[i] means that in position i seq_matches[i] patterns have been found
 	}
 
 	/* 5. Search for each pattern */
-	/* 5.1. Variable initialization */
-	/* 5.1.1. Thread management */
-	int num_threads = NUM_THREADS;
-	pthread_t** thread_handles = malloc(sizeof(pthread_t*) * num_threads);
-	pattern_recognition_args* args = malloc(sizeof(pattern_recognition_args) * num_threads);
+	unsigned long start;
+	int pat;
+	int start_idx = (pat_number / size) * rank;
+	int end_idx = (pat_number / size) * (rank + 1);
+	if (rank == size - 1){
+		end_idx = pat_number;
+	}
+	for( pat=start_idx; pat < end_idx; pat++ ) {
 
-	/* 5.1.2. Input parameters */
-	int *pat_n_start = (int*) malloc(sizeof(int) * num_threads);
-	int *pat_n_end = (int*) malloc(sizeof(int) * num_threads);
+		/* 5.1. For each posible starting position */
+		for( start=0; start <= seq_length - pat_length[pat]; start++) {
 
-	/* 5.1.3. Return parameters */
-	int *thread_pat_matches = (int*) calloc(sizeof(int), num_threads);
-	int **thread_seq_matches = (int**) malloc(sizeof(int*) * num_threads);
-
-	/* 5.2. Spawning threads */
-	for (int i = 0; i < num_threads; i++){
-		/* 5.2.1 Initializing thread handles */
-		thread_handles[i] = malloc(sizeof(pthread_t));
-
-		/* 5.2.2 Initializing function parameters */
-		pat_n_start[i] = pat_number/num_threads * i;
-		if (i == num_threads - 1){
-			pat_n_end[i] = pat_number;
-		} else {
-			pat_n_end[i] = pat_number/num_threads * (i + 1);
+			/* 5.1.1. For each pattern element */
+			for( lind=0; lind<pat_length[pat]; lind++) {
+				/* Stop this test when different nucleotids are found */
+				if ( sequence[start + lind] != pattern[pat][lind] ) break;
+			}
+			/* 5.1.2. Check if the loop ended with a match */
+			if ( lind == pat_length[pat] ) {
+				pat_matches++;
+				pat_found[pat] = start;
+				break;
+			}
 		}
 
-		thread_seq_matches[i] = (int*) calloc(sizeof(int), seq_length);
+		/* 5.2. Pattern found */
+		if ( pat_found[pat] != (unsigned long)NOT_FOUND ) {
+			/* 4.2.1. Increment the number of pattern matches on the sequence positions */
+			increment_matches( pat, pat_found, pat_length, seq_matches );
+		}
+	}
+	
 
-		args[i] = (pattern_recognition_args) {
-			pat_n_start[i],
-			pat_n_end[i],
-			seq_length,
-			pat_length,
-			sequence,
-			pattern,
-			&thread_pat_matches[i],
-			pat_found,
-			thread_seq_matches[i]
-			};
-
-		/* 5.2.3 Creating threads */
-		pthread_create(thread_handles[i], NULL, pattern_recognition, (void*) &args[i]);
+	/* 6. Exchanging information */
+	/* 6.0. Creating requests: one for pat_found and one for each chunk of seq_matches */
+	MPI_Request comm_req;
+	/* 6.0.1. Recalculating rounds considering that I also need to cast pat_matches */
+	rounds = (seq_length + 1)/INT_MAX;
+	if ((seq_length + 1)%INT_MAX != 0){
+		rounds++;
 	}
 
+	if (rank == 0){
+		/* 6.1 Receiving partial information at rank 0 */
+		/* 6.1.1 Pattern position receving (pat_found)*/
+		// Creating the information about each process:
+		// Elements per thread and displacement in the final array
+		int *recvcounts = (int*) malloc(sizeof(int) * size);
+		int *displs = (int*) malloc(sizeof(int) * size);
+		for (int i = 0; i < size; i++){
+			start_idx = (pat_number / size) * i;
+			end_idx = (pat_number / size) * (i + 1);
+			if (i == size - 1){
+				end_idx = pat_number;
+			}
+			recvcounts[i] = end_idx - start_idx;
+			displs[i] = start_idx;
+		}
 
-	/* 5.3. Joining threads */
-	for (int i = 0; i < num_threads; i++){
-		pthread_join(*thread_handles[i], NULL);
+		MPI_Igatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, recvcounts, displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
 
-		/* 6. Gathering partial results and assemblating them */
-		/* 6.1. Pattern matches */
-		pat_matches += thread_pat_matches[i];
+		/* 6.1.2. Matches in the sequence (seq_matches) and pat_matches */
+		seq_matches[seq_length] = pat_matches;
+		for (round = 0; round < rounds; round++){
+				index = round*INT_MAX;
+				if (round == rounds - 1){
+					quantity = seq_length + 1 - index;
+				} else {
+					quantity = INT_MAX;
+				}
+				MPI_Reduce(MPI_IN_PLACE, &seq_matches[index], quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+			
+			}
 
-		/* 6.2. Sequence matches */ 
-		for (unsigned long j = 0; j < seq_length; j++){
-			seq_matches[j] += thread_seq_matches[i][j];
+		/* 6.1.3. Waiting for results */
+		MPI_Wait(&comm_req, MPI_STATUS_IGNORE);
+
+		/* 6.1.4. Reporting pat_matches on the original variable */
+		pat_matches = seq_matches[seq_length];
+
+		/* 6.1.5. Freeing up temporary structures */
+		free(recvcounts);
+		free(displs);
+	
+	} else {
+		/* 6.2. Sending data from non-master processes */
+		/* 6.2.1. Gathering pat_found */
+		MPI_Igatherv(&pat_found[start_idx], end_idx-start_idx, MPI_UNSIGNED_LONG, NULL, NULL, NULL, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
+		
+		/* 6.2.2. Sending pat_matches through seq_matches */
+		seq_matches[seq_length] = pat_matches;
+		
+		/* 6.2.3.  MPI_Ireduce supports sending INT_MAX elements per call. Splitting up calls */
+		for (round = 0; round < rounds; round++){
+			index = round*INT_MAX;
+			if (round == rounds - 1){
+				quantity = seq_length + 1 - index;
+			} else {
+				quantity = INT_MAX;
+			}
+			MPI_Reduce(&seq_matches[index], NULL, quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+		/* 6.2.4. Waiting MPI calls */
+		MPI_Wait(&comm_req, MPI_STATUS_IGNORE);
 		}
 	}
 
@@ -517,37 +534,29 @@ int main(int argc, char *argv[]) {
 	/* Free local resources */	
 	free( sequence );
 	free( seq_matches );
-	for (ind = 0; ind < num_threads; ind++){
-		free(thread_handles[ind]);
-		free(thread_seq_matches[ind]);
-	}
-	free(thread_handles);
-	free(args);
-	free(pat_n_start);
-	free(pat_n_end);
-	free(thread_pat_matches);
-	free(thread_seq_matches);
-
 /*
  *
  * STOP HERE: DO NOT CHANGE THE CODE BELOW THIS POINT
  *
  */
 
-	/* 8. Stop global timer */
+	/* 8. Stop global time */
+	MPI_Barrier( MPI_COMM_WORLD );
 	ttotal = cp_Wtime() - ttotal;
 
 	/* 9. Output for leaderboard */
-	printf("\n");
-	/* 9.1. Total computation time */
-	printf("Time: %lf\n", ttotal );
+	if ( rank == 0 ) {
+		printf("\n");
+		/* 9.1. Total computation time */
+		printf("Time: %lf\n", ttotal );
 
-	/* 9.2. Results: Statistics */
-	printf("Result: %d, %lu, %lu\n\n", 
-			pat_matches,
-			checksum_found,
-			checksum_matches );
-		
+		/* 9.2. Results: Statistics */
+		printf("Result: %d, %lu, %lu\n\n", 
+				pat_matches,
+				checksum_found,
+				checksum_matches );
+	}
+				
 	/* 10. Free resources */	
 	int i;
 	for( i=0; i<pat_number; i++ ) free( pattern[i] );
@@ -556,5 +565,6 @@ int main(int argc, char *argv[]) {
 	free( pat_found );
 
 	/* 11. End */
+	MPI_Finalize();
 	return 0;
 }
