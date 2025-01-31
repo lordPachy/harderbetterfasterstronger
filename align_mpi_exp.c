@@ -417,7 +417,7 @@ int main(int argc, char *argv[]) {
 		rounds++;
 	}
 	
-	/* 6.0.2. Creating requests: one for pat_found and one for each chunk of seq_matches */
+	/* 6.0.2. Creating request for pat_found */
 	MPI_Request comm_req;
 
 	if (rank == 0){

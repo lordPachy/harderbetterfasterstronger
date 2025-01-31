@@ -431,7 +431,7 @@ int main(int argc, char *argv[]) {
 	
 
 	/* 6. Exchanging information */
-	/* 6.0. Creating requests: one for pat_found and one for each chunk of seq_matches */
+	/* 6.0. Creating request for pat_found */
 	MPI_Request comm_req;
 	/* 6.0.1. Recalculating rounds considering that I also need to cast pat_matches */
 	rounds = (seq_length + 1)/INT_MAX;
