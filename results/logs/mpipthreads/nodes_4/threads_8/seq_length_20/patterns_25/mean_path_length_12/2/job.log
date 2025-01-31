@@ -1,5 +1,5 @@
-000 (289991.000.000) 2025-01-29 12:04:33 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (295459.000.000) 2025-01-31 02:17:39 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_4045053_7bc0>
 ...
-009 (289991.000.000) 2025-01-29 12:04:48 Job was aborted.
+009 (295459.000.000) 2025-01-31 02:18:40 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...
