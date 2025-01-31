@@ -544,6 +544,19 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	/* 5.5. Freeing up threading constructs */
+	for (ind = 0; ind < num_threads; ind++){
+		free(thread_handles[ind]);
+		free(thread_pat_found[ind]);
+	}	
+	free(thread_pat_found);
+	free(thread_handles);
+	free(args);
+	free(seq_start);
+	free(seq_chunk_size);
+	free(pat_th_start);
+	free(pat_lock);
+
 	/* 6. Exchanging information */
 	/* 6.0.1. This will be needed later for exchanging seq_matches: splitting the sequence in chunks of size INT_MAX */
 	int quantity;
@@ -562,23 +575,19 @@ int main(int argc, char *argv[]) {
 		/* 6.1.1. Pattern position receving (pat_found)*/
 		// Creating the information about each process:
 		// Elements per thread and displacement in the final array
-		int *recvcounts_tmp = (int*) malloc(sizeof(int) * size);
-		int *displs_tmp = (int*) malloc(sizeof(int) * size);
+		int *recvcounts = (int*) malloc(sizeof(int) * size);
+		int *displs = (int*) malloc(sizeof(int) * size);
 		for (ind = 0; ind < size; ind++){
 			start_idx = (pat_number / size) * ind;
 			end_idx = (pat_number / size) * (ind + 1);
 			if (ind == size - 1){
 				end_idx = pat_number;
 			}
-			recvcounts_tmp[ind] = end_idx - start_idx;
-			displs_tmp[ind] = start_idx;
+			recvcounts[ind] = end_idx - start_idx;
+			displs[ind] = start_idx;
 		}
 
-		// These arguments need to be const int*
-		const int* recvcounts = recvcounts_tmp;
-		const int* displs = displs_tmp;
-
-		MPI_Igatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, recvcounts, displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
+		MPI_Igatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, (const int*)recvcounts, (const int*)displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
 
 		/* 6.1.2. Matches in the sequence (seq_matches) and pat_matches */
 		seq_matches[seq_length] = pat_matches;
@@ -600,8 +609,6 @@ int main(int argc, char *argv[]) {
 
 		/* 6.1.5. Freeing up temporary structures */
 		free(recvcounts);
-		free(recvcounts_tmp);
-		free(displs_tmp);
 		free(displs);
 	
 	} else {
@@ -626,6 +633,7 @@ int main(int argc, char *argv[]) {
 		MPI_Wait(&comm_req, MPI_STATUS_IGNORE);
 		}
 	}
+
 
 	/* 7. Check sums */
 	unsigned long checksum_matches = 0;
@@ -659,17 +667,6 @@ int main(int argc, char *argv[]) {
 	/* Free local resources */	
 	free( sequence );
 	free( seq_matches );
-	for (ind = 0; ind < num_threads; ind++){
-		free(thread_handles[ind]);
-		free(thread_pat_found[ind]);
-	}	
-	free(thread_pat_found);
-	free(thread_handles);
-	free(args);
-	free(seq_start);
-	free(seq_chunk_size);
-	free(pat_th_start);
-	free(pat_lock);
 
 /*
  *
