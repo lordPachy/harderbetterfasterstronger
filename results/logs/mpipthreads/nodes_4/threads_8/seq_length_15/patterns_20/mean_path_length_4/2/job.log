@@ -1,28 +1,37 @@
-000 (289924.000.000) 2025-01-29 11:56:21 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (295299.000.000) 2025-01-31 01:51:37 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_4045053_7bc0>
 ...
-014 (289924.000.003) 2025-01-29 11:56:35 Node 3 executing on host: <192.168.0.130:9618?addrs=192.168.0.130-9618&alias=node130.di.rm1&noUDP&sock=startd_2751195_838e>
+014 (295299.000.003) 2025-01-31 01:51:47 Node 3 executing on host: <192.168.0.148:9618?addrs=192.168.0.148-9618&alias=node148.di.rm1&noUDP&sock=startd_1547_b119>
 ...
-014 (289924.000.001) 2025-01-29 11:56:35 Node 1 executing on host: <192.168.0.142:9618?addrs=192.168.0.142-9618&alias=node142.di.rm1&noUDP&sock=startd_1996_ab1f>
+014 (295299.000.000) 2025-01-31 01:51:47 Node 0 executing on host: <192.168.0.110:9618?addrs=192.168.0.110-9618&alias=node110.di.rm1&noUDP&sock=startd_2154_0b16>
 ...
-014 (289924.000.000) 2025-01-29 11:56:35 Node 0 executing on host: <192.168.0.137:9618?addrs=192.168.0.137-9618&alias=node137.di.rm1&noUDP&sock=startd_1934_2440>
+014 (295299.000.002) 2025-01-31 01:51:47 Node 2 executing on host: <192.168.0.109:9618?addrs=192.168.0.109-9618&alias=node109.di.rm1&noUDP&sock=startd_1627_90ad>
 ...
-014 (289924.000.002) 2025-01-29 11:56:35 Node 2 executing on host: <192.168.0.124:9618?addrs=192.168.0.124-9618&alias=node124.di.rm1&noUDP&sock=startd_2143_7f8b>
+014 (295299.000.001) 2025-01-31 01:51:47 Node 1 executing on host: <192.168.0.123:9618?addrs=192.168.0.123-9618&alias=node123.di.rm1&noUDP&sock=startd_2149_9d1d>
 ...
-001 (289924.000.000) 2025-01-29 11:56:35 Job executing on host: MPI_job
+001 (295299.000.000) 2025-01-31 01:51:47 Job executing on host: MPI_job
 ...
-008 (289924.000.000) 2025-01-29 11:56:37 Node 0 caught SIGTERM, cleaning up mpirun
+008 (295299.000.000) 2025-01-31 01:51:49 Launching orted on Node 3 of 4
 ...
-004 (289924.000.000) 2025-01-29 11:56:37 Job was evicted.
+008 (295299.000.000) 2025-01-31 01:51:49 Launching orted on Node 0 of 4
+...
+008 (295299.000.000) 2025-01-31 01:51:49 Launching orted on Node 2 of 4
+...
+008 (295299.000.000) 2025-01-31 01:51:49 Launching orted on Node 1 of 4
+...
+008 (295299.000.000) 2025-01-31 01:52:38 Node 0 caught SIGTERM, cleaning up mpirun
+...
+004 (295299.000.000) 2025-01-31 01:52:38 Job was evicted.
 	(0) CPU times
-		Usr 0 00:00:00, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:01:00, Sys 0 00:00:01  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
 	0  -  Run Bytes Sent By Job
-	135164  -  Run Bytes Received By Job
+	135324  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :                 8         8 
-	   Disk (KB)            :       47       35    391050 
-	   Memory (MB)          :                 1       128 
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :     8570       35  21531460 
+	   GPUs                 :                           1 
+	   Memory (MB)          :      274       12     65536 
 ...
-009 (289924.000.000) 2025-01-29 11:56:37 Job was aborted.
+009 (295299.000.000) 2025-01-31 01:52:38 Job was aborted.
 	via condor_rm (by user calzona_2046920)
 ...

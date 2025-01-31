@@ -1,96 +1,52 @@
-000 (290184.000.000) 2025-01-29 12:29:09 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_2032_5c88>
+000 (295933.000.000) 2025-01-31 03:18:33 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_4045053_7bc0>
 ...
-014 (290184.000.000) 2025-01-29 12:29:26 Node 0 executing on host: <192.168.0.135:9618?addrs=192.168.0.135-9618&alias=node135.di.rm1&noUDP&sock=startd_2000_6980>
+014 (295933.000.003) 2025-01-31 03:18:35 Node 3 executing on host: <192.168.0.148:9618?addrs=192.168.0.148-9618&alias=node148.di.rm1&noUDP&sock=startd_1547_b119>
 ...
-014 (290184.000.005) 2025-01-29 12:29:26 Node 5 executing on host: <192.168.0.107:9618?addrs=192.168.0.107-9618&alias=node107.di.rm1&noUDP&sock=startd_1981_6134>
+014 (295933.000.001) 2025-01-31 03:18:35 Node 1 executing on host: <192.168.0.122:9618?addrs=192.168.0.122-9618&alias=node122.di.rm1&noUDP&sock=startd_2134_5331>
 ...
-014 (290184.000.002) 2025-01-29 12:29:26 Node 2 executing on host: <192.168.0.111:9618?addrs=192.168.0.111-9618&alias=node111.di.rm1&noUDP&sock=startd_2044_97ab>
+014 (295933.000.002) 2025-01-31 03:18:35 Node 2 executing on host: <192.168.0.151:9618?addrs=192.168.0.151-9618&alias=node151.di.rm1&noUDP&sock=startd_1528_a8cd>
 ...
-014 (290184.000.003) 2025-01-29 12:29:26 Node 3 executing on host: <192.168.0.112:9618?addrs=192.168.0.112-9618&alias=node112.di.rm1&noUDP&sock=startd_2169_5502>
+014 (295933.000.004) 2025-01-31 03:18:35 Node 4 executing on host: <192.168.0.113:9618?addrs=192.168.0.113-9618&alias=node113.di.rm1&noUDP&sock=startd_3668932_c305>
 ...
-014 (290184.000.001) 2025-01-29 12:29:27 Node 1 executing on host: <192.168.0.124:9618?addrs=192.168.0.124-9618&alias=node124.di.rm1&noUDP&sock=startd_2143_7f8b>
+014 (295933.000.005) 2025-01-31 03:18:35 Node 5 executing on host: <192.168.0.113:9618?addrs=192.168.0.113-9618&alias=node113.di.rm1&noUDP&sock=startd_3668932_c305>
 ...
-014 (290184.000.004) 2025-01-29 12:29:27 Node 4 executing on host: <192.168.0.134:9618?addrs=192.168.0.134-9618&alias=node134.di.rm1&noUDP&sock=startd_2073_7bea>
+014 (295933.000.006) 2025-01-31 03:18:35 Node 6 executing on host: <192.168.0.143:9618?addrs=192.168.0.143-9618&alias=node143.di.rm1&noUDP&sock=startd_2061_40c7>
 ...
-014 (290184.000.007) 2025-01-29 12:29:27 Node 7 executing on host: <192.168.0.139:9618?addrs=192.168.0.139-9618&alias=node139.di.rm1&noUDP&sock=startd_1966_1748>
+014 (295933.000.007) 2025-01-31 03:18:35 Node 7 executing on host: <192.168.0.143:9618?addrs=192.168.0.143-9618&alias=node143.di.rm1&noUDP&sock=startd_2061_40c7>
 ...
-014 (290184.000.006) 2025-01-29 12:29:27 Node 6 executing on host: <192.168.0.134:9618?addrs=192.168.0.134-9618&alias=node134.di.rm1&noUDP&sock=startd_2073_7bea>
+014 (295933.000.000) 2025-01-31 03:18:35 Node 0 executing on host: <192.168.0.142:9618?addrs=192.168.0.142-9618&alias=node142.di.rm1&noUDP&sock=startd_1996_ab1f>
 ...
-001 (290184.000.000) 2025-01-29 12:29:27 Job executing on host: MPI_job
+001 (295933.000.000) 2025-01-31 03:18:35 Job executing on host: MPI_job
 ...
-008 (290184.000.000) 2025-01-29 12:29:29 Launching orted on Node 0 of 8
+008 (295933.000.000) 2025-01-31 03:18:37 Launching orted on Node 7 of 8
 ...
-008 (290184.000.000) 2025-01-29 12:29:29 Launching orted on Node 3 of 8
+008 (295933.000.000) 2025-01-31 03:18:37 Launching orted on Node 6 of 8
 ...
-008 (290184.000.000) 2025-01-29 12:29:29 Launching orted on Node 5 of 8
+008 (295933.000.000) 2025-01-31 03:18:37 Launching orted on Node 3 of 8
 ...
-008 (290184.000.000) 2025-01-29 12:29:29 Launching orted on Node 2 of 8
+008 (295933.000.000) 2025-01-31 03:18:37 Launching orted on Node 1 of 8
 ...
-008 (290184.000.000) 2025-01-29 12:29:29 Launching orted on Node 7 of 8
+008 (295933.000.000) 2025-01-31 03:18:37 Launching orted on Node 2 of 8
 ...
-008 (290184.000.000) 2025-01-29 12:29:29 Launching orted on Node 1 of 8
+008 (295933.000.000) 2025-01-31 03:18:37 Launching orted on Node 5 of 8
 ...
-008 (290184.000.000) 2025-01-29 12:29:29 Launching orted on Node 6 of 8
+008 (295933.000.000) 2025-01-31 03:18:37 Launching orted on Node 4 of 8
 ...
-008 (290184.000.000) 2025-01-29 12:29:29 Launching orted on Node 4 of 8
+008 (295933.000.000) 2025-01-31 03:18:37 Launching orted on Node 0 of 8
 ...
-008 (290184.000.000) 2025-01-29 12:37:25 orted exited on Node 3 of 8
+008 (295933.000.000) 2025-01-31 03:19:33 Node 0 caught SIGTERM, cleaning up mpirun
 ...
-008 (290184.000.000) 2025-01-29 12:37:25 orted exited on Node 0 of 8
-...
-008 (290184.000.000) 2025-01-29 12:37:25 orted exited on Node 1 of 8
-...
-008 (290184.000.000) 2025-01-29 12:37:25 orted exited on Node 2 of 8
-...
-008 (290184.000.000) 2025-01-29 12:37:25 orted exited on Node 5 of 8
-...
-008 (290184.000.000) 2025-01-29 12:37:25 orted exited on Node 6 of 8
-...
-008 (290184.000.000) 2025-01-29 12:37:25 orted exited on Node 7 of 8
-...
-008 (290184.000.000) 2025-01-29 12:37:25 orted exited on Node 4 of 8
-...
-015 (290184.000.003) 2025-01-29 12:37:25 Node 3 terminated.
-	(1) Normal termination (return value 0)
-		Usr 0 00:39:47, Sys 0 00:02:59  -  Run Remote Usage
+004 (295933.000.000) 2025-01-31 03:19:34 Job was evicted.
+	(0) CPU times
+		Usr 0 00:01:31, Sys 0 00:00:03  -  Run Remote Usage
 		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:39:47, Sys 0 00:02:59  -  Total Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
-	2363  -  Run Bytes Sent By Node
-	33791  -  Run Bytes Received By Node
-	2363  -  Total Bytes Sent By Node
-	33791  -  Total Bytes Received By Node
-...
-015 (290184.000.000) 2025-01-29 12:37:25 Node 0 terminated.
-	(1) Normal termination (return value 0)
-		Usr 0 00:20:02, Sys 0 00:00:21  -  Run Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:20:02, Sys 0 00:00:21  -  Total Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
-	3911  -  Run Bytes Sent By Node
-	33791  -  Run Bytes Received By Node
-	3911  -  Total Bytes Sent By Node
-	33791  -  Total Bytes Received By Node
-...
-005 (290184.000.000) 2025-01-29 12:37:26 Job terminated.
-	(1) Normal termination (return value 0)
-		Usr 0 05:09:50, Sys 0 00:17:32  -  Run Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
-		Usr 0 00:17:36, Sys 0 00:00:20  -  Total Remote Usage
-		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
-	6274  -  Run Bytes Sent By Job
-	270328  -  Run Bytes Received By Job
-	6274  -  Total Bytes Sent By Job
-	270328  -  Total Bytes Received By Job
+	0  -  Run Bytes Sent By Job
+	270648  -  Run Bytes Received By Job
 	Partitionable Resources :    Usage  Request Allocated 
-	   Cpus                 :    16.00        4         4 
-	   Disk (KB)            :    57          35    470875 
-	   Memory (MB)          : 62805           1       128 
-
-	Job terminated of its own accord at 2025-01-29T12:37:25Z with exit-code 0.
+	   Cpus                 :                 1         2 
+	   Disk (KB)            :     8563       35 103011620 
+	   Memory (MB)          :      368      307    100096 
 ...
-009 (290184.000.000) 2025-01-29 12:37:26 Job was aborted.
+009 (295933.000.000) 2025-01-31 03:19:34 Job was aborted.
 	via condor_rm (by user calzona_2046920)
-
-	Job terminated by itself at 2025-01-29T12:37:25Z (using method 0: OF_ITS_OWN_ACCORD).
 ...

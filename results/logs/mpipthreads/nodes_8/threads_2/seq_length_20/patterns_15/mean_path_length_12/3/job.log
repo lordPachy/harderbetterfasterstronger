@@ -1,0 +1,146 @@
+000 (295700.000.000) 2025-01-31 02:47:17 Job submitted from host: <192.168.0.102:9618?addrs=192.168.0.102-9618&alias=submitter&noUDP&sock=schedd_4045053_7bc0>
+...
+014 (295700.000.002) 2025-01-31 02:47:24 Node 2 executing on host: <192.168.0.108:9618?addrs=192.168.0.108-9618&alias=node108.di.rm1&noUDP&sock=startd_1979_0203>
+...
+014 (295700.000.003) 2025-01-31 02:47:24 Node 3 executing on host: <192.168.0.147:9618?addrs=192.168.0.147-9618&alias=node147.di.rm1&noUDP&sock=startd_1513_5ee1>
+...
+014 (295700.000.004) 2025-01-31 02:47:24 Node 4 executing on host: <192.168.0.112:9618?addrs=192.168.0.112-9618&alias=node112.di.rm1&noUDP&sock=startd_2169_5502>
+...
+014 (295700.000.000) 2025-01-31 02:47:24 Node 0 executing on host: <192.168.0.151:9618?addrs=192.168.0.151-9618&alias=node151.di.rm1&noUDP&sock=startd_1528_a8cd>
+...
+014 (295700.000.006) 2025-01-31 02:47:24 Node 6 executing on host: <192.168.0.151:9618?addrs=192.168.0.151-9618&alias=node151.di.rm1&noUDP&sock=startd_1528_a8cd>
+...
+014 (295700.000.001) 2025-01-31 02:47:24 Node 1 executing on host: <192.168.0.141:9618?addrs=192.168.0.141-9618&alias=node141.di.rm1&noUDP&sock=startd_2077_3a4b>
+...
+014 (295700.000.007) 2025-01-31 02:47:24 Node 7 executing on host: <192.168.0.132:9618?addrs=192.168.0.132-9618&alias=node132.di.rm1&noUDP&sock=startd_1999_b9e8>
+...
+014 (295700.000.005) 2025-01-31 02:47:24 Node 5 executing on host: <192.168.0.142:9618?addrs=192.168.0.142-9618&alias=node142.di.rm1&noUDP&sock=startd_1996_ab1f>
+...
+001 (295700.000.000) 2025-01-31 02:47:24 Job executing on host: MPI_job
+...
+008 (295700.000.000) 2025-01-31 02:47:26 Launching orted on Node 3 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:26 Launching orted on Node 2 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:26 Launching orted on Node 4 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:26 Launching orted on Node 6 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:26 Launching orted on Node 7 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:26 Launching orted on Node 0 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:27 Launching orted on Node 5 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:27 Launching orted on Node 1 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:48 orted exited on Node 7 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:48 orted exited on Node 1 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:48 orted exited on Node 5 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:48 orted exited on Node 2 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:48 orted exited on Node 3 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:48 orted exited on Node 6 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:48 orted exited on Node 4 of 8
+...
+008 (295700.000.000) 2025-01-31 02:47:48 orted exited on Node 0 of 8
+...
+015 (295700.000.003) 2025-01-31 02:47:48 Node 3 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:35, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:35, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2333  -  Run Bytes Sent By Node
+	33831  -  Run Bytes Received By Node
+	2333  -  Total Bytes Sent By Node
+	33831  -  Total Bytes Received By Node
+...
+015 (295700.000.002) 2025-01-31 02:47:48 Node 2 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:34, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:34, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2333  -  Run Bytes Sent By Node
+	33831  -  Run Bytes Received By Node
+	2333  -  Total Bytes Sent By Node
+	33831  -  Total Bytes Received By Node
+...
+015 (295700.000.004) 2025-01-31 02:47:48 Node 4 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:34, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:34, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2355  -  Run Bytes Sent By Node
+	33831  -  Run Bytes Received By Node
+	2355  -  Total Bytes Sent By Node
+	33831  -  Total Bytes Received By Node
+...
+015 (295700.000.007) 2025-01-31 02:47:48 Node 7 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:34, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:34, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2333  -  Run Bytes Sent By Node
+	33831  -  Run Bytes Received By Node
+	2333  -  Total Bytes Sent By Node
+	33831  -  Total Bytes Received By Node
+...
+015 (295700.000.005) 2025-01-31 02:47:48 Node 5 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:35, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:35, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2333  -  Run Bytes Sent By Node
+	33831  -  Run Bytes Received By Node
+	2333  -  Total Bytes Sent By Node
+	33831  -  Total Bytes Received By Node
+...
+015 (295700.000.006) 2025-01-31 02:47:48 Node 6 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:34, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:34, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	0  -  Run Bytes Sent By Node
+	33831  -  Run Bytes Received By Node
+	0  -  Total Bytes Sent By Node
+	33831  -  Total Bytes Received By Node
+...
+015 (295700.000.000) 2025-01-31 02:47:48 Node 0 terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	3429  -  Run Bytes Sent By Node
+	33831  -  Run Bytes Received By Node
+	3429  -  Total Bytes Sent By Node
+	33831  -  Total Bytes Received By Node
+...
+005 (295700.000.000) 2025-01-31 02:47:49 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:04:00, Sys 0 00:00:04  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	15116  -  Run Bytes Sent By Job
+	270648  -  Run Bytes Received By Job
+	15116  -  Total Bytes Sent By Job
+	270648  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :                 1         2 
+	   Disk (KB)            :       51       35 103029645 
+	   Memory (MB)          :      279       81    100096 
+
+	Job terminated of its own accord at 2025-01-31T02:47:48Z with exit-code 0.
+...

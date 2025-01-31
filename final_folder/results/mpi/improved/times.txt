@@ -1,3 +1,6 @@
+These times are arranged in the following fashion:
+Number of processes | seq_length | Number of patterns | mean_pat_length | STD | Mean time on 5 measurements
+
 [2.00000000e+00 1.02400000e+03 1.02400000e+03 1.60000000e+01
  2.67246703e-05 3.49260000e-03]
 [2.00000000e+00 1.02400000e+03 1.02400000e+03 6.40000000e+01
