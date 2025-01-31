@@ -415,8 +415,7 @@ int main(int argc, char *argv[]) {
 
 	/* 3. Other results related to the main sequence */
 	int *seq_matches;
-	// The "+1" will be used to to communicate pat_matches
-	seq_matches = (int *)malloc(sizeof(int) * (seq_length + 1));
+	seq_matches = (int *)malloc(sizeof(int) * seq_length);
 	if ( seq_matches == NULL ) {
 		fprintf(stderr,"\n-- Error allocating aux sequence structures for size: %lu\n", (seq_length + 1));
 		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
@@ -536,7 +535,6 @@ int main(int argc, char *argv[]) {
 		for (pat = start_idx; pat < end_idx; pat++){
 			if (pat_found[pat] == (unsigned long)NOT_FOUND && thread_pat_found[ind][pat] != (unsigned long)NOT_FOUND){
 				pat_found[pat] = thread_pat_found[ind][pat];
-				pat_matches++;
 
 				/* 5.4.2. Sequence matches */
 				increment_matches(pat, thread_pat_found[ind], pat_length, seq_matches);
@@ -562,8 +560,8 @@ int main(int argc, char *argv[]) {
 	int quantity;
 	// Calculating the number of necessary MPI_Sends (with the assumptions seq_length is not
 	// bigger than INT_MAX^2)
-	int rounds = (seq_length + 1)/INT_MAX;
-	if ((seq_length + 1)%INT_MAX != 0){
+	int rounds = seq_length/INT_MAX;
+	if (seq_length%INT_MAX != 0){
 		rounds++;
 	}
 	
@@ -589,12 +587,11 @@ int main(int argc, char *argv[]) {
 
 		MPI_Igatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, (const int*)recvcounts, (const int*)displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
 
-		/* 6.1.2. Matches in the sequence (seq_matches) and pat_matches */
-		seq_matches[seq_length] = pat_matches;
+		/* 6.1.2. Matches in the sequence (seq_matches) */
 		for (int round = 0; round < rounds; round++){
 			lind = round*INT_MAX;
 			if (round == rounds - 1){
-				quantity = seq_length + 1 - lind;
+				quantity = seq_length - lind;
 			} else {
 				quantity = INT_MAX;
 			}
@@ -604,8 +601,12 @@ int main(int argc, char *argv[]) {
 		/* 6.1.3. Waiting for results */
 		MPI_Wait(&comm_req, MPI_STATUS_IGNORE);
 
-		/* 6.1.4. Reporting pat_matches on the original variable */
-		pat_matches = seq_matches[seq_length];
+		/* 6.1.4. Calculating pat_matches */
+		for (ind = 0; ind < pat_number; ind++){
+			if (pat_found[ind] != (unsigned long)NOT_FOUND){
+				pat_matches++;
+			}
+		}
 
 		/* 6.1.5. Freeing up temporary structures */
 		free(recvcounts);
@@ -616,14 +617,11 @@ int main(int argc, char *argv[]) {
 		/* 6.2.1. Gathering pat_found */
 		MPI_Igatherv((const void*) &pat_found[start_idx], end_idx-start_idx, MPI_UNSIGNED_LONG, NULL, NULL, NULL, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
 		
-		/* 6.2.2. Sending pat_matches through seq_matches */
-		seq_matches[seq_length] = pat_matches;
-		
-		/* 6.2.3.  MPI_Ireduce supports sending INT_MAX elements per call. Splitting up calls */
+		/* 6.2.2.  MPI_Ireduce supports sending INT_MAX elements per call. Splitting up calls */
 		for (int round = 0; round < rounds; round++){
 			lind = round*INT_MAX;
 			if (round == rounds - 1){
-				quantity = seq_length + 1 - lind;
+				quantity = seq_length - lind;
 			} else {
 				quantity = INT_MAX;
 			}

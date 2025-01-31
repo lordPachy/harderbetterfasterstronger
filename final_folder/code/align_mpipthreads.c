@@ -415,8 +415,7 @@ int main(int argc, char *argv[]) {
 
 	/* 3. Other results related to the main sequence */
 	int *seq_matches;
-	// The "+1" will be used to to communicate pat_matches
-	seq_matches = (int *)malloc(sizeof(int) * (seq_length + 1));
+	seq_matches = (int *)malloc(sizeof(int) * seq_length);
 	if ( seq_matches == NULL ) {
 		fprintf(stderr,"\n-- Error allocating aux sequence structures for size: %lu\n", (seq_length + 1));
 		MPI_Abort( MPI_COMM_WORLD, EXIT_FAILURE );
@@ -489,28 +488,28 @@ int main(int argc, char *argv[]) {
 	unsigned long **thread_pat_found = (unsigned long**) malloc(sizeof(unsigned long*)*num_threads);
 	
 	/* 5.2. Spawning threads */
-	for (int i = 0; i < num_threads; i++){
+	for (ind = 0; ind < num_threads; ind++){
 		/* 5.2.1 Initializing thread handles */
-		thread_handles[i] = malloc(sizeof(pthread_t));
+		thread_handles[ind] = malloc(sizeof(pthread_t));
 
 		/* 5.2.2 Initializing function parameters */
-		seq_start[i] = ((unsigned long)i) * seq_length/((unsigned long)num_threads);
-		pat_th_start[i] = i * (end_idx - start_idx)/num_threads;
-		if (i == num_threads - 1){
-			seq_chunk_size[i] = seq_length - seq_start[i];
+		seq_start[ind] = (seq_length/((unsigned long)num_threads)) * ((unsigned long)ind);
+		pat_th_start[ind] = (end_idx - start_idx)/num_threads * ind;
+		if (ind == num_threads - 1){
+			seq_chunk_size[ind] = seq_length - seq_start[ind];
 		} else {
-			seq_chunk_size[i] = seq_length/((unsigned long)num_threads);
+			seq_chunk_size[ind] = (seq_length/((unsigned long)num_threads)) * ((unsigned long)ind + 1);
 		}
 
-		thread_pat_found[i] = (unsigned long*) malloc(sizeof(unsigned long)*pat_number);
-		for(ind = 0; ind < pat_number; ind++) {
-			thread_pat_found[i][ind] = (unsigned long)NOT_FOUND;
+		thread_pat_found[ind] = (unsigned long*) malloc(sizeof(unsigned long)*pat_number);
+		for(int i = 0; i < pat_number; i++) {
+			thread_pat_found[ind][i] = (unsigned long)NOT_FOUND;
 		}
 
-		args[i] = (pattern_recognition_args) {
-			seq_start[i],
-			seq_chunk_size[i],
-			pat_th_start[i],
+		args[ind] = (pattern_recognition_args) {
+			seq_start[ind],
+			seq_chunk_size[ind],
+			pat_th_start[ind],
 			pat_lock,
 			start_idx,
 			end_idx,
@@ -518,40 +517,51 @@ int main(int argc, char *argv[]) {
 			pat_length,
 			sequence,
 			pattern,
-			thread_pat_found[i]
+			thread_pat_found[ind]
 			};
 
 		/* 5.2.3 Creating threads */
-		pthread_create(thread_handles[i], NULL, pattern_recognition, (void*) &args[i]);
+		pthread_create(thread_handles[ind], NULL, pattern_recognition, (void*) &args[ind]);
 	}
 
 	/* 5.3. Joining threads */
 	// Threads are joined in reverse order since the first threads
 	// could take more, given they might have to match longer sequences
-	for (int i = num_threads - 1; i >= 0; i--){
-		pthread_join(*thread_handles[i], NULL);
+	for (ind = num_threads - 1; ind >= 0; ind--){
+		pthread_join(*thread_handles[ind], NULL);
 
 		/* 5.4 Gathering partial results and assemblating them */
 		/* 5.4.1. Pattern matches */
 		for (pat = start_idx; pat < end_idx; pat++){
-			if (pat_found[pat] == (unsigned long)NOT_FOUND && thread_pat_found[i][pat] != (unsigned long)NOT_FOUND){
-				pat_found[pat] = thread_pat_found[i][pat];
-				pat_matches++;
+			if (pat_found[pat] == (unsigned long)NOT_FOUND && thread_pat_found[ind][pat] != (unsigned long)NOT_FOUND){
+				pat_found[pat] = thread_pat_found[ind][pat];
 
 				/* 5.4.2. Sequence matches */
-				increment_matches(pat, thread_pat_found[i], pat_length, seq_matches);
+				increment_matches(pat, thread_pat_found[ind], pat_length, seq_matches);
 			}
 		}
 	}
 
+	/* 5.5. Freeing up threading constructs */
+	for (ind = 0; ind < num_threads; ind++){
+		free(thread_handles[ind]);
+		free(thread_pat_found[ind]);
+	}	
+	free(thread_pat_found);
+	free(thread_handles);
+	free(args);
+	free(seq_start);
+	free(seq_chunk_size);
+	free(pat_th_start);
+	free(pat_lock);
+
 	/* 6. Exchanging information */
 	/* 6.0.1. This will be needed later for exchanging seq_matches: splitting the sequence in chunks of size INT_MAX */
-	unsigned long index;
 	int quantity;
 	// Calculating the number of necessary MPI_Sends (with the assumptions seq_length is not
 	// bigger than INT_MAX^2)
-	int rounds = (seq_length + 1)/INT_MAX;
-	if ((seq_length + 1)%INT_MAX != 0){
+	int rounds = seq_length/INT_MAX;
+	if (seq_length%INT_MAX != 0){
 		rounds++;
 	}
 	
@@ -565,35 +575,38 @@ int main(int argc, char *argv[]) {
 		// Elements per thread and displacement in the final array
 		int *recvcounts = (int*) malloc(sizeof(int) * size);
 		int *displs = (int*) malloc(sizeof(int) * size);
-		for (int i = 0; i < size; i++){
-			start_idx = (pat_number / size) * i;
-			end_idx = (pat_number / size) * (i + 1);
-			if (i == size - 1){
+		for (ind = 0; ind < size; ind++){
+			start_idx = (pat_number / size) * ind;
+			end_idx = (pat_number / size) * (ind + 1);
+			if (ind == size - 1){
 				end_idx = pat_number;
 			}
-			recvcounts[i] = end_idx - start_idx;
-			displs[i] = start_idx;
+			recvcounts[ind] = end_idx - start_idx;
+			displs[ind] = start_idx;
 		}
 
-		MPI_Igatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, recvcounts, displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
+		MPI_Igatherv(MPI_IN_PLACE, recvcounts[0], MPI_UNSIGNED_LONG, pat_found, (const int*)recvcounts, (const int*)displs, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
 
-		/* 6.1.2. Matches in the sequence (seq_matches) and pat_matches */
-		seq_matches[seq_length] = pat_matches;
+		/* 6.1.2. Matches in the sequence (seq_matches) */
 		for (int round = 0; round < rounds; round++){
-				index = round*INT_MAX;
-				if (round == rounds - 1){
-					quantity = seq_length + 1 - index;
-				} else {
-					quantity = INT_MAX;
-				}
-				MPI_Reduce(MPI_IN_PLACE, &seq_matches[index], quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+			lind = round*INT_MAX;
+			if (round == rounds - 1){
+				quantity = seq_length - lind;
+			} else {
+				quantity = INT_MAX;
 			}
+			MPI_Reduce(MPI_IN_PLACE, &seq_matches[lind], quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+		}
 
 		/* 6.1.3. Waiting for results */
 		MPI_Wait(&comm_req, MPI_STATUS_IGNORE);
 
-		/* 6.1.4. Reporting pat_matches on the original variable */
-		pat_matches = seq_matches[seq_length];
+		/* 6.1.4. Calculating pat_matches */
+		for (ind = 0; ind < pat_number; ind++){
+			if (pat_found[ind] != (unsigned long)NOT_FOUND){
+				pat_matches++;
+			}
+		}
 
 		/* 6.1.5. Freeing up temporary structures */
 		free(recvcounts);
@@ -602,25 +615,23 @@ int main(int argc, char *argv[]) {
 	} else {
 		/* 6.2. Sending data from non-master processes */
 		/* 6.2.1. Gathering pat_found */
-		MPI_Igatherv(&pat_found[start_idx], end_idx-start_idx, MPI_UNSIGNED_LONG, NULL, NULL, NULL, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
+		MPI_Igatherv((const void*) &pat_found[start_idx], end_idx-start_idx, MPI_UNSIGNED_LONG, NULL, NULL, NULL, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD, &comm_req);
 		
-		/* 6.2.2. Sending pat_matches through seq_matches */
-		seq_matches[seq_length] = pat_matches;
-		
-		/* 6.2.3.  MPI_Ireduce supports sending INT_MAX elements per call. Splitting up calls */
+		/* 6.2.2.  MPI_Ireduce supports sending INT_MAX elements per call. Splitting up calls */
 		for (int round = 0; round < rounds; round++){
-			index = round*INT_MAX;
+			lind = round*INT_MAX;
 			if (round == rounds - 1){
-				quantity = seq_length + 1 - index;
+				quantity = seq_length - lind;
 			} else {
 				quantity = INT_MAX;
 			}
-			MPI_Reduce(&seq_matches[index], NULL, quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+			MPI_Reduce((const void*) &seq_matches[lind], NULL, quantity, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
 		/* 6.2.4. Waiting MPI calls */
 		MPI_Wait(&comm_req, MPI_STATUS_IGNORE);
 		}
 	}
+
 
 	/* 7. Check sums */
 	unsigned long checksum_matches = 0;
@@ -654,17 +665,6 @@ int main(int argc, char *argv[]) {
 	/* Free local resources */	
 	free( sequence );
 	free( seq_matches );
-	for (int j = 0; j < num_threads; j++){
-		free(thread_handles[j]);
-		free(thread_pat_found[j]);
-	}	
-	free(thread_pat_found);
-	free(thread_handles);
-	free(args);
-	free(seq_start);
-	free(seq_chunk_size);
-	free(pat_th_start);
-	free(pat_lock);
 
 /*
  *
